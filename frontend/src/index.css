@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased transition-colors duration-300;
+  }
+}
+
+@layer components {
+  /* Industry-level light UI primitives (dark mode stays via existing `dark:` classes) */
+  .ai-card {
+    @apply rounded-2xl border border-lightBorder bg-white/85 backdrop-blur-md shadow-ai-card;
+  }
+
+  .ai-card-hover {
+    @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-ai-card;
+  }
+
+  .ai-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-900;
+    @apply bg-ai-cta;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:shadow-ai-glow-soft active:scale-[0.99];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiAccent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg;
+  }
+
+  .ai-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold;
+    @apply border border-lightBorder bg-white/70 text-textSecondary;
+    @apply transition-colors duration-200 ease-out hover:bg-aiPrimary/10 hover:text-textPrimary;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiAccent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg;
+  }
+
+  .ai-input {
+    @apply w-full rounded-xl border border-lightBorder bg-white/80 px-4 py-2.5 text-sm text-textPrimary placeholder:text-slate-400;
+    @apply transition-all duration-200 ease-out;
+    @apply focus:outline-none focus:border-aiAccent/60 focus:ring-2 focus:ring-aiAccent/20;
+  }
+}
+
+/* Glassmorphism panel styling */
+.glass-panel {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 157, 255, 0.14);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Premium custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 157, 255, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 194, 255, 0.45);
+}
+
+/* Background animated glow orbs */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .glow-orb {
+  opacity: 0.25;
+}
+
+/* Interactive Card Flip Classes */
+.flip-card {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Custom Heatmap Grid Tooltip Styling */
+.heatmap-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
