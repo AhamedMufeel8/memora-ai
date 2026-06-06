@@ -1,5 +1,5 @@
 const ChatSession = require('../models/ChatSession');
-const { generateTutorResponse, generateSessionTitle } = require('../services/tutorService');
+const { generateTutorResponse, generateSessionTitle } = require('../services/tutor.service');
 
 /**
  * Helper to ensure a session belongs to the requesting user

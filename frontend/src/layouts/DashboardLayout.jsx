@@ -132,7 +132,7 @@ export const DashboardLayout = ({ children }) => {
 
       try {
         // keepalive improves chances the request completes during unload
-        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/analytics/session/end`, {
+        fetch('http://localhost:5000/api/analytics/session/end', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -191,9 +191,9 @@ export const DashboardLayout = ({ children }) => {
       <div className="glow-orb w-96 h-96 bg-aiPrimary/10 bottom-10 right-10" />
 
       {/* Desktop Sidebar (Left Panel) */}
-      <aside className="hidden lg:flex flex-col w-64 border-r border-lightBorder dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 h-screen z-20 shadow-sm transition-colors duration-200">
+      <aside className="hidden lg:flex flex-col w-64 border-r border-border dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 h-screen z-20 shadow-sm transition-colors duration-200">
         {/* Brand */}
-        <div className="h-16 flex items-center gap-2 px-6 border-b border-lightBorder dark:border-slate-800/60">
+        <div className="h-16 flex items-center gap-2 px-6 border-b border-border dark:border-slate-800/60">
           <div className="w-8 h-8 rounded-lg bg-ai-cta flex items-center justify-center text-white font-bold text-lg shadow-ai-glow-soft dark:shadow-neon-indigo">
             A
           </div>
@@ -224,7 +224,7 @@ export const DashboardLayout = ({ children }) => {
         </nav>
 
         {/* User Card */}
-        <div className="p-4 border-t border-lightBorder dark:border-slate-800/60">
+        <div className="p-4 border-t border-border dark:border-slate-800/60">
           <div className="flex items-center gap-3 mb-3">
             <img
               src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop'}
@@ -265,9 +265,9 @@ export const DashboardLayout = ({ children }) => {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed top-0 bottom-0 left-0 w-64 border-r border-lightBorder dark:border-slate-800/80 bg-white dark:bg-slate-900/90 backdrop-blur-md z-40 lg:hidden flex flex-col shadow-ai-card"
+              className="fixed top-0 bottom-0 left-0 w-64 border-r border-border dark:border-slate-800/80 bg-white dark:bg-slate-900/90 backdrop-blur-md z-40 lg:hidden flex flex-col shadow-ai-card"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-lightBorder dark:border-slate-800/60">
+              <div className="h-16 flex items-center justify-between px-6 border-b border-border dark:border-slate-800/60">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-ai-cta flex items-center justify-center text-white font-bold text-lg shadow-ai-glow-soft dark:shadow-neon-indigo">
                     A
@@ -303,7 +303,7 @@ export const DashboardLayout = ({ children }) => {
                 })}
               </nav>
 
-              <div className="p-4 border-t border-lightBorder dark:border-slate-800/60">
+              <div className="p-4 border-t border-border dark:border-slate-800/60">
                 <div className="flex items-center gap-3 mb-3">
                   <img
                     src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop'}
@@ -331,7 +331,7 @@ export const DashboardLayout = ({ children }) => {
       {/* Main Panel Area */}
       <div className="flex-grow flex flex-col min-w-0">
         {/* Top Navbar */}
-        <header className="h-16 border-b border-lightBorder dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 shadow-sm transition-colors duration-200">
+        <header className="h-16 border-b border-border dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 shadow-sm transition-colors duration-200">
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -361,14 +361,14 @@ export const DashboardLayout = ({ children }) => {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl border border-lightBorder dark:border-slate-800 text-textSecondary dark:text-slate-400 hover:bg-aiPrimary/5 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl border border-border dark:border-slate-800 text-textSecondary dark:text-slate-400 hover:bg-aiPrimary/5 dark:hover:bg-slate-800 transition-colors"
             >
               {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-aiAccent dark:text-indigo-600" />}
             </button>
 
             {/* Notifications Button */}
             <div className="relative">
-              <button className="p-2 rounded-xl border border-lightBorder dark:border-slate-800 text-textSecondary dark:text-slate-400 hover:bg-aiPrimary/5 dark:hover:bg-slate-800 transition-colors">
+              <button className="p-2 rounded-xl border border-border dark:border-slate-800 text-textSecondary dark:text-slate-400 hover:bg-aiPrimary/5 dark:hover:bg-slate-800 transition-colors">
                 <Bell className="w-4 h-4" />
               </button>
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-aiAccent/80 dark:bg-cyan-500 shadow-ai-glow-soft dark:shadow-neon-cyan animate-pulse" />
@@ -378,7 +378,7 @@ export const DashboardLayout = ({ children }) => {
             <img
               src={user?.avatar}
               alt="Avatar"
-              className="w-8 h-8 rounded-full border border-lightBorder dark:border-slate-800 object-cover cursor-pointer"
+              className="w-8 h-8 rounded-full border border-border dark:border-slate-800 object-cover cursor-pointer"
               onClick={() => navigate('/settings')}
             />
           </div>

@@ -39,6 +39,12 @@ const isQuotaError = (error) => {
   return message.includes('429') || message.includes('Too Many Requests') || message.includes('Quota exceeded');
 };
 
+// Detect authentication errors (e.g., leaked or revoked API key)
+const isAuthError = (error) => {
+  const message = String(error?.message || error || '');
+  return message.includes('403') || message.toLowerCase().includes('leaked') || message.toLowerCase().includes('revoked');
+};
+
 const createQuotaError = (error) => {
   const message = String(error?.message || error || '');
   const retryMatch = message.match(/retryDelay":"(\d+)s"/i) || message.match(/retry in ([\d.]+)s/i);
@@ -183,6 +189,11 @@ const generateFlashcardsWithGemini = async ({ text, difficulty, cardCount }) => 
     } catch (error) {
       lastError = error;
       console.error(`[Gemini Flashcards] Model failed (${modelName}):`, error.message);
+      if (isAuthError(error)) {
+        const authError = new Error('Google Gemini API key is invalid or has been revoked. Please provide a valid API key.');
+        authError.statusCode = 403;
+        throw authError;
+      }
       if (!isModelNotFoundError(error) && !isQuotaError(error)) {
         throw error;
       }

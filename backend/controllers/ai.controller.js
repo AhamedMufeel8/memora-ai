@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { PDFParse } = require('pdf-parse');
-const { generateSummary } = require('../services/aiService');
+const { generateSummary } = require('../services/ai.service');
 const Summary = require('../models/Summary');
 
 const MAX_TEXT_CHARS = 60000;

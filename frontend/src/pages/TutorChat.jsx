@@ -67,7 +67,7 @@ const MarkdownText = ({ text }) => {
               // Headings: # Heading, ## Heading, etc.
               if (trimmed.startsWith('# ')) {
                 return (
-                  <h3 key={lineIdx} className="text-[13px] font-bold text-aiAccent dark:text-cyan-400 mt-4 mb-2 first:mt-0 flex items-center gap-1.5 border-b border-lightBorder dark:border-slate-850 pb-1 uppercase tracking-wide">
+                  <h3 key={lineIdx} className="text-[13px] font-bold text-aiAccent dark:text-cyan-400 mt-4 mb-2 first:mt-0 flex items-center gap-1.5 border-b border-border dark:border-slate-800 pb-1 uppercase tracking-wide">
                     <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-aiAccent dark:text-indigo-500" />
                     {trimmed.slice(2)}
                   </h3>

@@ -13,7 +13,7 @@
 @layer components {
   /* Industry-level light UI primitives (dark mode stays via existing `dark:` classes) */
   .ai-card {
-    @apply rounded-2xl border border-lightBorder bg-white/85 backdrop-blur-md shadow-ai-card;
+    @apply rounded-2xl border border-border bg-white/85 backdrop-blur-md shadow-ai-card;
   }
 
   .ai-card-hover {
@@ -30,13 +30,13 @@
 
   .ai-btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold;
-    @apply border border-lightBorder bg-white/70 text-textSecondary;
+    @apply border border-border bg-white/70 text-textSecondary;
     @apply transition-colors duration-200 ease-out hover:bg-aiPrimary/10 hover:text-textPrimary;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiAccent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg;
   }
 
   .ai-input {
-    @apply w-full rounded-xl border border-lightBorder bg-white/80 px-4 py-2.5 text-sm text-textPrimary placeholder:text-slate-400;
+    @apply w-full rounded-xl border border-border bg-white/80 px-4 py-2.5 text-sm text-textPrimary placeholder:text-slate-400;
     @apply transition-all duration-200 ease-out;
     @apply focus:outline-none focus:border-aiAccent/60 focus:ring-2 focus:ring-aiAccent/20;
   }

@@ -19,6 +19,13 @@ const isModelNotFoundError = (error) => {
   return message.includes('404') || message.includes('is not found') || message.includes('not supported for generateContent');
 };
 
+// Detect authentication errors such as leaked or revoked API keys
+const isAuthError = (error) => {
+  const message = String(error?.message || error || '');
+  return message.includes('403') || message.toLowerCase().includes('leaked') || message.toLowerCase().includes('revoked');
+};
+
+// Detect quota exhaustion errors
 const isQuotaError = (error) => {
   const message = String(error?.message || error || '');
   return message.includes('429') || message.includes('Too Many Requests') || message.includes('Quota exceeded');
@@ -207,6 +214,11 @@ const generateQuizWithGemini = async ({ text, difficulty, questionCount }) => {
     } catch (error) {
       lastError = error;
       console.error(`[Gemini Quiz] Model failed (${modelName}):`, error.message);
+      if (isAuthError(error)) {
+        const authError = new Error('Google Gemini API key is invalid or has been revoked. Please provide a valid API key.');
+        authError.statusCode = 403;
+        throw authError;
+      }
       if (!isModelNotFoundError(error) && !isQuotaError(error)) {
         throw error;
       }

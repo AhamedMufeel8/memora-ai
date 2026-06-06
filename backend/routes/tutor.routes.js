@@ -7,7 +7,7 @@ const {
   sendMessage,
   renameSession,
   deleteSession
-} = require('../controllers/tutorController');
+} = require('../controllers/tutor.controller');
 
 const router = express.Router();
 

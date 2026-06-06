@@ -8,19 +8,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        darkBg: '#0f172a',
-        darkCard: 'rgba(30, 41, 59, 0.7)',
-        // Light mode redesign palette (Dark mode unchanged via `dark:` classes)
-        lightBg: '#F8FBFF',
-        lightCard: '#FFFFFF',
-        lightBorder: '#DCEAF7',
-        // User request: ONLY white + #00FFF7 accent
-        aiPrimary: '#00FFF7',
-        aiSecondary: '#00FFF7',
-        aiAccent: '#00FFF7',
-        aiGlow: '#00FFF7',
-        textPrimary: '#0F172A',
-        textSecondary: '#64748B',
+        // Color palette – modern premium SaaS
+        bg: '#F8FAFC',
+        lightBg: '#F8FAFC',
+        'bg-dark': '#0F172A',
+        card: '#FFFFFF',
+        'card-dark': 'rgba(30,41,59,0.85)', // slate‑800 with slight opacity for glass effect
+        border: '#E5E7EB',
+        'border-border': '#E5E7EB',
+        lightBorder: '#E5E7EB',
+        'border-dark': '#374151',
+
+        // Alias colors for legacy class names used in CSS
+        aiPrimary: '#3A7FFF',
+        'aiPrimary-dark': '#5393FF',
+        aiSecondary: '#6C757D',
+        'aiSecondary-dark': '#9CA3AF',
+        aiAccent: '#00C9A7',
+        'aiAccent-dark': '#14D9B8',
+        textPrimary: '#111827',
+        'textPrimary-dark': '#F1F5F9',
+        textSecondary: '#4B5563',
+        'textSecondary-dark': '#CBD5E1',
+
+        primary: '#3A7FFF',
+        'primary-dark': '#5393FF',
+        secondary: '#6C757D',
+        'secondary-dark': '#9CA3AF',
+        accent: '#00C9A7',
+        'accent-dark': '#14D9B8',
+
+        'text-primary': '#111827',
+        'text-primary-dark': '#F1F5F9',
+        'text-secondary': '#4B5563',
+        'text-secondary-dark': '#CBD5E1',
+
+        success: '#10B981',
+        'success-dark': '#34D399',
+        error: '#EF4444',
+        'error-dark': '#F87171',
+        warning: '#F59E0B',
+        'warning-dark': '#FBBF24',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

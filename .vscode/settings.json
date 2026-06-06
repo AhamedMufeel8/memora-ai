@@ -1,0 +1,24 @@
+{
+  // Disable VS Code's built-in CSS validator so it stops flagging
+  // Tailwind at-rules (@tailwind, @apply, @layer) as unknown.
+  // PostCSS / Vite handle these correctly at build time.
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+
+  // If you have Tailwind CSS IntelliSense installed, enable class sorting & hints
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "javascriptreact": "javascript",
+    "typescriptreact": "typescript"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["className\\s*=\\s*['\"`]([^'\"]*)['\"`]"]
+  ],
+
+  // Show Tailwind class completions inside template strings
+  "editor.quickSuggestions": {
+    "strings": true
+  }
+}

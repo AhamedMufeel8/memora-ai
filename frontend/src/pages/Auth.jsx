@@ -56,12 +56,17 @@ export const Auth = () => {
           setErrorMsg('All fields are required.');
           return;
         }
+        if (password.length < 6) {
+          setErrorMsg('Password must be at least 6 characters.');
+          return;
+        }
         await signup(name, email, password);
         addToast('Account created! Welcome to AI Study Platform.', 'success');
       }
       navigate('/dashboard');
-    } catch {
-      setErrorMsg('Authentication error. Please double check details.');
+    } catch (err) {
+      const msg = err?.message || err?.data?.message || 'Authentication failed. Please check your details and try again.';
+      setErrorMsg(msg);
     }
   };
 

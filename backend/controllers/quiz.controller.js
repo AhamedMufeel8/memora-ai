@@ -3,11 +3,10 @@ const path = require('path');
 const { PDFParse } = require('pdf-parse');
 const Quiz = require('../models/Quiz');
 const QuizAttempt = require('../models/QuizAttempt');
-const {
-  clampQuestionCount,
+const { clampQuestionCount,
   generateQuizWithGemini,
   normalizeDifficulty,
-} = require('../services/quizService');
+} = require('../services/quiz.service');
 
 const MIN_TEXT_LENGTH = 80;
 

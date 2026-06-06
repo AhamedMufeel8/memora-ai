@@ -9,7 +9,7 @@ const {
   clampCardCount,
   generateFlashcardsWithGemini,
   normalizeDifficulty,
-} = require('../services/flashcardService');
+} = require('../services/flashcard.service');
 
 const MIN_TEXT_LENGTH = 80;
 
