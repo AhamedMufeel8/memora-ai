@@ -132,7 +132,7 @@ export const DashboardLayout = ({ children }) => {
 
       try {
         // keepalive improves chances the request completes during unload
-        fetch('http://localhost:5000/api/analytics/session/end', {
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/analytics/session/end`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
