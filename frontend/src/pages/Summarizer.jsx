@@ -148,8 +148,11 @@ export const Summarizer = () => {
       setPreviewUrl('');
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
-      const message = error?.message || error?.response?.data?.message || 'Failed to generate summary. Please try again.';
-      console.error('[Summarizer] Upload failed:', error);
+      const message = error?.response?.data?.message || error?.message || 'Failed to generate summary. Please try again.';
+      console.error('[Summarizer] Upload/Processing failed:', error);
+      if (error?.response?.data) {
+        console.error('[Summarizer] Backend Error Data:', error.response.data);
+      }
       setErrorMessage(message);
       addToast(message, 'error');
     } finally {

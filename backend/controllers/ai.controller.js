@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { PDFParse } = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 const { generateSummary } = require('../services/ai.service');
 const Summary = require('../models/Summary');
 
@@ -47,14 +47,7 @@ const extractPdfText = async (file) => {
       throw new AppError('Uploaded PDF is empty', 400);
     }
 
-    const parser = new PDFParse({ data: dataBuffer });
-    let pdfData;
-
-    try {
-      pdfData = await parser.getText();
-    } finally {
-      await parser.destroy();
-    }
+    const pdfData = await pdfParse(dataBuffer);
 
     const extractedText = (pdfData.text || '').trim();
     console.log('[AI Summarizer] Extracted text:', {
@@ -135,7 +128,9 @@ const summarizeText = async (req, res) => {
 
     res.json(payload);
   } catch (error) {
-    console.error('[AI Summarizer] Summarize error:', error);
+    console.error('[AI Summarizer] Summarize error:', error.message);
+    if (error.stack) console.error(error.stack);
+    
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Server error during summarization',

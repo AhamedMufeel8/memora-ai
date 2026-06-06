@@ -139,7 +139,11 @@ export const Flashcards = () => {
       await loadData('');
       addToast('AI flashcard deck generated and saved.', 'success');
     } catch (error) {
-      const message = error?.message || 'AI flashcard generation failed. Please try again.';
+      const message = error?.response?.data?.message || error?.message || 'AI flashcard generation failed. Please try again.';
+      console.error('[Flashcards] Generation failed:', error);
+      if (error?.response?.data) {
+        console.error('[Flashcards] Backend Error Data:', error.response.data);
+      }
       setErrorMessage(message);
       addToast(message, 'error');
     } finally {

@@ -26,7 +26,7 @@ const normalizeDifficulty = (difficulty = 'intermediate') => {
 const clampCardCount = (count) => {
   const parsed = Number.parseInt(count, 10);
   if (Number.isNaN(parsed)) return 20;
-  return Math.min(Math.max(parsed, 5), 60);
+  return Math.min(Math.max(parsed), 60);
 };
 
 const isModelNotFoundError = (error) => {
@@ -189,6 +189,7 @@ const generateFlashcardsWithGemini = async ({ text, difficulty, cardCount }) => 
     } catch (error) {
       lastError = error;
       console.error(`[Gemini Flashcards] Model failed (${modelName}):`, error.message);
+      if (error.response) console.error('[Gemini Flashcards] Provider Error Response:', error.response);
       if (isAuthError(error)) {
         const authError = new Error('Google Gemini API key is invalid or has been revoked. Please provide a valid API key.');
         authError.statusCode = 403;

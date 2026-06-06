@@ -113,6 +113,7 @@ ${text}
       } catch (error) {
         lastError = error;
         console.error(`[Gemini] Model failed (${modelName}):`, error.message);
+        if (error.response) console.error('[Gemini] Provider Error Response:', error.response);
         if (!isModelNotFoundError(error) && !isQuotaError(error)) {
           throw error;
         }

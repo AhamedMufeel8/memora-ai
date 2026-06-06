@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { PDFParse } = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 const Flashcard = require('../models/Flashcard');
 const FlashcardDeck = require('../models/FlashcardDeck');
 const FlashcardStudy = require('../models/FlashcardStudy');
@@ -41,14 +41,7 @@ const extractPdfText = async (file) => {
       throw new AppError('Uploaded PDF is empty', 400);
     }
 
-    const parser = new PDFParse({ data: dataBuffer });
-    let pdfData;
-
-    try {
-      pdfData = await parser.getText();
-    } finally {
-      await parser.destroy();
-    }
+    const pdfData = await pdfParse(dataBuffer);
 
     const text = String(pdfData.text || '').trim();
     if (!text) {
@@ -117,7 +110,9 @@ const generateFlashcards = async (req, res) => {
 
     res.status(201).json({ success: true, data: deck });
   } catch (error) {
-    console.error('[Flashcards] Generate error:', error);
+    console.error('[Flashcards] Generate error:', error.message);
+    if (error.stack) console.error(error.stack);
+    
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.statusCode === 429
