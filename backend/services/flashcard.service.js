@@ -25,8 +25,10 @@ const normalizeDifficulty = (difficulty = 'intermediate') => {
 
 const clampCardCount = (count) => {
   const parsed = Number.parseInt(count, 10);
-  if (Number.isNaN(parsed)) return 20;
-  return Math.min(Math.max(parsed), 60);
+  if (Number.isNaN(parsed)) return 10; // default to 10 cards if invalid
+  const min = 1;
+  const max = 60;
+  return Math.min(Math.max(parsed, min), max);
 };
 
 const isModelNotFoundError = (error) => {
@@ -222,8 +224,54 @@ const generateFlashcardsWithGemini = async ({ text, difficulty, cardCount }) => 
   };
 };
 
+/**
+ * Simple local fallback for flashcard generation.
+ * Splits the input text into sentences and creates naive Q/A pairs.
+ * This is a lightweight deterministic fallback used when Gemini is unavailable.
+ */
+const generateFlashcardsLocally = ({ text, difficulty, cardCount }) => {
+  const normalizedCount = clampCardCount(cardCount);
+  const sentences = String(text || '')
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .filter(Boolean);
+
+  const flashcards = [];
+  for (let i = 0; i < Math.min(normalizedCount, sentences.length); i++) {
+    const sentence = sentences[i].trim();
+    // Very naive question: take the first clause as a question prompt.
+    const question = sentence.length > 60 ? sentence.slice(0, 57) + '...' : sentence;
+    const answer = `Refer to the source material for details.`;
+    flashcards.push({ question, answer, topic: 'General' });
+  }
+
+  return {
+    title: 'Local Flashcard Deck',
+    topics: ['General'],
+    difficulty: normalizeDifficulty(difficulty),
+    flashcards,
+  };
+};
+
+/**
+ * Public API: tries Gemini first, falls back to local generation on recoverable errors.
+ */
+const generateFlashcards = async (params) => {
+  try {
+    return await generateFlashcardsWithGemini(params);
+  } catch (err) {
+    // If the error is authentication related, rethrow – user must fix key.
+    if (err.statusCode === 403) {
+      throw err;
+    }
+    console.warn('[Flashcard Service] Gemini generation failed, falling back to local algorithm. Reason:', err.message);
+    return generateFlashcardsLocally(params);
+  }
+};
+
 module.exports = {
   clampCardCount,
   generateFlashcardsWithGemini,
+  generateFlashcards,
   normalizeDifficulty,
 };

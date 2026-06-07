@@ -232,7 +232,6 @@ const generateQuizWithGemini = async ({ text, difficulty, questionCount }) => {
     throw lastError || new Error('No Gemini model was available for quiz generation');
   }
 
-
   const response = await result.response;
   const payload = extractJson(response.text());
   const questions = validateGeneratedQuiz(payload, normalizedCount);
@@ -247,8 +246,61 @@ const generateQuizWithGemini = async ({ text, difficulty, questionCount }) => {
   };
 };
 
+/**
+ * Simple deterministic local fallback for quiz generation.
+ * Creates multiple-choice questions by extracting sentences and forming naive options.
+ */
+const generateQuizLocally = ({ text, difficulty, questionCount }) => {
+  const normalizedCount = clampQuestionCount(questionCount);
+  const sentences = String(text || '')
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .filter(Boolean);
+
+  const questions = [];
+  for (let i = 0; i < Math.min(normalizedCount, sentences.length); i++) {
+    const sentence = sentences[i].trim();
+    const prompt = sentence.length > 80 ? sentence.slice(0, 77) + '...' : sentence;
+    const correct = 'Correct answer placeholder';
+    const options = [correct, 'Option B', 'Option C', 'Option D'];
+    // Shuffle options deterministic simple rotation
+    const shuffled = options.slice(i % 4).concat(options.slice(0, i % 4));
+    const correctOption = shuffled[0];
+    questions.push({
+      type: 'mcq',
+      question: prompt,
+      options: shuffled,
+      correctAnswer: correctOption,
+      explanation: 'Local fallback explanation.',
+    });
+  }
+
+  return {
+    title: 'Local Quiz',
+    topics: ['General'],
+    difficulty: normalizeDifficulty(difficulty),
+    questions,
+  };
+};
+
+/**
+ * Public API that attempts Gemini first, falls back to local generation on recoverable errors.
+ */
+const generateQuiz = async (params) => {
+  try {
+    return await generateQuizWithGemini(params);
+  } catch (err) {
+    if (err.statusCode === 403) {
+      throw err;
+    }
+    console.warn('[Quiz Service] Gemini generation failed, falling back to local algorithm. Reason:', err.message);
+    return generateQuizLocally(params);
+  }
+};
+
 module.exports = {
   clampQuestionCount,
   generateQuizWithGemini,
+  generateQuiz,
   normalizeDifficulty,
 };

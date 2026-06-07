@@ -1,15 +1,15 @@
 const fs = require('fs/promises');
 const path = require('path');
-const pdfParse = require('pdf-parse');
 const Flashcard = require('../models/Flashcard');
 const FlashcardDeck = require('../models/FlashcardDeck');
 const FlashcardStudy = require('../models/FlashcardStudy');
 const StudyLog = require('../models/StudyLog');
 const {
   clampCardCount,
-  generateFlashcardsWithGemini,
+  generateFlashcards: generateFlashcardsService,
   normalizeDifficulty,
 } = require('../services/flashcard.service');
+const { extractPdfText } = require('../services/pdfExtraction.service');
 
 const MIN_TEXT_LENGTH = 80;
 
@@ -30,36 +30,11 @@ const cleanupFile = async (filePath) => {
   }
 };
 
-const extractPdfText = async (file) => {
-  if (!file?.path) {
-    throw new AppError('Missing PDF file', 400);
-  }
-
-  try {
-    const dataBuffer = await fs.readFile(path.resolve(file.path));
-    if (!dataBuffer.length) {
-      throw new AppError('Uploaded PDF is empty', 400);
-    }
-
-    const pdfData = await pdfParse(dataBuffer);
-
-    const text = String(pdfData.text || '').trim();
-    if (!text) {
-      throw new AppError('PDF extraction failed: no readable text found', 422);
-    }
-
-    return text;
-  } catch (error) {
-    if (error.statusCode) throw error;
-    console.error('[Flashcards] PDF extraction error:', error);
-    throw new AppError('PDF extraction failed. The file may be corrupted, encrypted, or scanned as images.', 422);
-  }
-};
-
 const resolveSourceText = async (req) => {
   const pastedText = typeof req.body.text === 'string' ? req.body.text.trim() : '';
   if (req.file) {
-    return extractPdfText(req.file);
+    const extraction = await extractPdfText(req.file);
+    return extraction.text;
   }
   return pastedText;
 };
@@ -81,7 +56,7 @@ const generateFlashcards = async (req, res) => {
       throw new AppError('Please provide at least 80 characters of readable study material.', 400);
     }
 
-    const generated = await generateFlashcardsWithGemini({
+    const generated = await generateFlashcardsService({
       text: sourceText,
       difficulty,
       cardCount,

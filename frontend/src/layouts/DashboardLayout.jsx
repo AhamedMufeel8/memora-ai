@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useStudy } from '../context/StudyContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { analyticsService } from '../services/analytics.service';
+import { API_BASE_URL } from '../config/api';
 import {
   BookOpen,
   LayoutDashboard,
@@ -130,8 +131,7 @@ export const DashboardLayout = ({ children }) => {
       if (!sessionId || !token) return;
 
       try {
-        // keepalive improves chances the request completes during unload
-        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/analytics/session/end`, {
+        fetch(`${API_BASE_URL}/analytics/session/end`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -374,7 +374,7 @@ export const DashboardLayout = ({ children }) => {
 
             {/* Micro User Avatar */}
             <img
-              src={user?.avatar}
+              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop'}
               alt="Avatar"
               className="w-8 h-8 rounded-full border border-border dark:border-slate-800 object-cover cursor-pointer"
               onClick={() => navigate('/settings')}

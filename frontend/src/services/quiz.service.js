@@ -1,4 +1,4 @@
-import api from './api';
+import api from './apiClient';
 
 export const quizService = {
   generateQuiz: async (formData, onUploadProgress) => {

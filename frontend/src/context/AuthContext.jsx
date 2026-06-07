@@ -59,7 +59,6 @@ export const AuthProvider = ({ children }) => {
 
     initializeAuth();
   }, []);
-
   const login = async (email, password) => {
     setLoading(true);
     try {
@@ -67,6 +66,10 @@ export const AuthProvider = ({ children }) => {
       if (response.success && response.token) {
         localStorage.setItem('token', response.token);
         Cookies.set('token', response.token, { expires: 1 }); // 1 day
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken);
+          Cookies.set('refreshToken', response.refreshToken, { expires: 7 }); // 7 days
+        }
         const userData = {
           id: response.data._id,
           name: response.data.name,
@@ -98,6 +101,10 @@ export const AuthProvider = ({ children }) => {
       if (response.success && response.token) {
         localStorage.setItem('token', response.token);
         Cookies.set('token', response.token, { expires: 1 }); // 1 day
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken);
+          Cookies.set('refreshToken', response.refreshToken, { expires: 7 }); // 7 days
+        }
         const userData = {
           id: response.data._id,
           name: response.data.name,
@@ -139,6 +146,8 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.setItem('token', 'mock_social_token');
     Cookies.set('token', 'mock_social_token', { expires: 1 });
+    localStorage.setItem('refreshToken', 'mock_social_refresh_token');
+    Cookies.set('refreshToken', 'mock_social_refresh_token', { expires: 7 });
     setUser(mockUser);
     localStorage.setItem('ai_study_user', JSON.stringify(mockUser));
     sessionStorage.setItem('show_onboarding', 'true');
@@ -150,9 +159,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('ai_study_user');
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     Cookies.remove('token');
+    Cookies.remove('refreshToken');
   };
-
   const updateUserProfile = (updatedDetails) => {
     setUser(prev => {
       const next = { ...prev, ...updatedDetails };

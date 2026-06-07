@@ -135,7 +135,19 @@ export const TutorChat = () => {
 
   // Sidebar search and responsive controls
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      setIsSidebarOpen(!mobile);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Renaming chat state
   const [editingSessionId, setEditingSessionId] = useState(null);
@@ -152,7 +164,24 @@ export const TutorChat = () => {
 
   useEffect(() => {
     currentSessionIdRef.current = currentSessionId;
+    if (currentSessionId) {
+      // Store current session ID for restoration on reload
+      localStorage.setItem('tutor_currentSessionId', currentSessionId);
+    }
   }, [currentSessionId]);
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem(`messages_${currentSessionId}`);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, [currentSessionId]);
+
+  useEffect(() => {
+    if (currentSessionId) {
+      localStorage.setItem(`messages_${currentSessionId}`, JSON.stringify(messages));
+    }
+  }, [messages, currentSessionId]);
 
   // Suggested Follow-up queries
   const suggestedFollowUps = [
@@ -172,6 +201,10 @@ export const TutorChat = () => {
   // Fetch session history summaries on mount
   useEffect(() => {
     fetchSessions();
+    const saved = localStorage.getItem('tutor_currentSessionId');
+    if (saved) {
+      loadSession(saved);
+    }
   }, []);
 
   // Fetch sessions from the backend
@@ -195,6 +228,9 @@ export const TutorChat = () => {
     setLoadingHistory(true);
     setCurrentSessionId(sessionId);
     setSelectedAttachment(null);
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
     try {
       const response = await tutorService.getSession(sessionId);
       if (response.success && response.data) {
@@ -211,6 +247,9 @@ export const TutorChat = () => {
 
   // Create a brand new session
   const handleNewChat = async (initialQuery = null) => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
     try {
       const response = await tutorService.createSession({
         studentLevel: studentLevel,
@@ -263,7 +302,9 @@ export const TutorChat = () => {
     // Capture context reference text if selected (RAG simulation preparation)
     let contextText = "";
     if (selectedAttachment) {
-      contextText = `Reference Document: "${selectedAttachment.name}" of size ${selectedAttachment.size}. Document context: This document is fully indexed and verified under user study files.`;
+      // Include the actual summary generated for the document, if available
+      const summary = selectedAttachment.summary || '';
+      contextText = `Reference Document: "${selectedAttachment.name}" (${selectedAttachment.size}). Summary: ${summary}`;
     }
 
     // Add local optimistic user message to bubble thread
@@ -409,6 +450,7 @@ export const TutorChat = () => {
 
   // Attach RAG helper context
   const handleAttachContext = (doc) => {
+    // Attach the full document object, which includes its AI‑generated summary
     setSelectedAttachment(doc);
     setShowAttachMenu(false);
     addToast(`Attached ${doc.name} as study reference!`, 'success');
@@ -420,9 +462,9 @@ export const TutorChat = () => {
   );
 
   return (
-    <div className="space-y-4 font-sans h-[calc(100vh-8.5rem)] flex flex-col justify-between overflow-hidden">
+    <div className="space-y-4 font-sans h-[calc(100vh-11rem)] sm:h-[calc(100vh-12rem)] lg:h-[calc(100vh-8.5rem)] flex flex-col justify-between overflow-hidden">
       {/* Title Header with Sidebar Toggle button */}
-      <div className="flex-shrink-0 flex justify-between items-center bg-white/40 dark:bg-slate-900/40 backdrop-blur border border-slate-200/50 dark:border-slate-850/50 p-4 rounded-2xl shadow-sm">
+      <div className="flex-shrink-0 flex justify-between items-center bg-white/40 dark:bg-slate-900/40 backdrop-blur border border-slate-200/50 dark:border-slate-850/50 p-3 sm:p-4 rounded-2xl shadow-sm">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -432,11 +474,11 @@ export const TutorChat = () => {
             <Menu className="w-4 h-4" />
           </button>
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+            <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-indigo-500" />
               AI Study Tutor
             </h2>
-            <p className="text-[10px] text-slate-400 mt-0.5">Your personal learning assistant. Ask questions, understand concepts, and get instant explanations.</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 hidden sm:block">Your personal learning assistant. Ask questions, understand concepts, and get instant explanations.</p>
           </div>
         </div>
 
@@ -447,14 +489,32 @@ export const TutorChat = () => {
         
         {/* Sidebar History (Left Panel) */}
         <AnimatePresence>
+          {isMobile && isSidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 lg:hidden"
+            />
+          )}
+
           {isSidebarOpen && (
             <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 280, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="flex-shrink-0 border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/65 backdrop-blur-md rounded-2xl flex flex-col justify-between overflow-hidden shadow-sm h-full"
+              initial={isMobile ? { x: '-100%' } : { width: 0, opacity: 0 }}
+              animate={isMobile ? { x: 0 } : { width: 280, opacity: 1 }}
+              exit={isMobile ? { x: '-100%' } : { width: 0, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className={`${isMobile ? 'fixed top-0 bottom-0 left-0 w-[280px] z-40 rounded-r-2xl border-r' : 'flex-shrink-0 w-[280px] border'} border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 backdrop-blur-md flex flex-col justify-between overflow-hidden shadow-sm h-full`}
             >
+              {isMobile && (
+                <div className="flex justify-between items-center px-4 pt-4">
+                  <span className="text-[10px] font-bold text-slate-450 dark:text-slate-400 uppercase tracking-widest">Chat History</span>
+                  <button onClick={() => setIsSidebarOpen(false)} className="p-1 rounded text-slate-400 hover:text-slate-650 dark:hover:text-slate-200">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
               {/* Search and Action bar */}
               <div className="p-4 border-b border-slate-100 dark:border-slate-850 space-y-3">
                 <button
@@ -794,6 +854,7 @@ export const TutorChat = () => {
                 placeholder="Ask your AI Study Coach a question..."
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
+                onFocus={scrollToBottom}
                 className="flex-grow px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/20 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors disabled:opacity-60"
               />
 

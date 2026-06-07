@@ -1,4 +1,4 @@
-import api from './api';
+import api from './apiClient';
 
 export const flashcardService = {
   generateDeck: async (formData, onUploadProgress) => {

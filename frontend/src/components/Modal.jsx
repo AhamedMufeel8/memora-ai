@@ -36,8 +36,8 @@ export const Modal = ({ isOpen, onClose, title, children }) => {
             className="relative w-full max-w-lg border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden z-10"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="font-semibold text-lg text-slate-900 dark:text-white font-sans">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="font-semibold text-base sm:text-lg text-slate-900 dark:text-white font-sans">
                 {title}
               </h3>
               <button
@@ -49,7 +49,7 @@ export const Modal = ({ isOpen, onClose, title, children }) => {
             </div>
 
             {/* Inner Content */}
-            <div className="p-6 max-h-[75vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 max-h-[75vh] overflow-y-auto">
               {children}
             </div>
           </motion.div>

@@ -199,7 +199,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Website Features Quick Links */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
         {[
           { name: 'AI Summarizer', icon: Sparkles, to: '/summarizer', color: 'text-aiAccent dark:text-indigo-500', bg: 'bg-aiPrimary/10 dark:bg-indigo-500/10' },
           { name: 'AI Flashcards', icon: BookOpen, to: '/flashcards', color: 'text-aiAccent dark:text-emerald-500', bg: 'bg-aiPrimary/10 dark:bg-emerald-500/10' },
@@ -220,38 +220,46 @@ export const Dashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {metricCards(dashboard.overview).map((card) => (
-          <motion.div
-            key={card.label}
-            whileHover={{ y: -3 }}
-            className="rounded-xl border border-slate-200/80 bg-white/75 p-5 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/65"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold text-slate-500 dark:text-slate-400">{card.label}</p>
-                <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">{card.value}</p>
-              </div>
-              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.bg} ${card.color}`}>
-                <card.icon className="h-5 w-5" />
-              </div>
-            </div>
-          </motion.div>
-        ))}
+     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  {metricCards(dashboard.overview).map((card) => (
+    <motion.div
+      key={card.label}
+      whileHover={{ y: -3 }}
+      className="rounded-xl border border-slate-200/80 bg-white/75 p-5 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/65 min-h-[130px] flex items-center"
+    >
+      <div className="flex w-full items-center justify-between">
+        <div className="flex flex-col justify-center">
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            {card.label}
+          </p>
+
+          <h3 className="mt-3 text-3xl font-extrabold leading-none text-slate-900 dark:text-white">
+            {card.value}
+          </h3>
+        </div>
+
+        <div
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${card.bg} ${card.color}`}
+        >
+          <card.icon className="h-6 w-6" />
+        </div>
       </div>
+    </motion.div>
+  ))}
+</div>
 
       <div className="grid grid-cols-1 gap-6">
         <Section title="Weekly Study Time" icon={BarChart3}>
           {weeklyLoading ? (
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 <Skeleton className="h-16 rounded-lg" count={3} />
               </div>
               <Skeleton className="h-64 rounded-lg" />
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {[
                   ['Weekly Total', formatMinutes(weekly.weeklyTotalMinutes)],
                   ['Daily Average', formatMinutes(weekly.dailyAverageMinutes)],
@@ -327,7 +335,7 @@ export const Dashboard = () => {
         </Section>
 
         <Section title="Resource Usage" icon={BookOpen} className="xl:col-span-2">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
             {resourceItems(dashboard.resourceUsage).map(({ label, value, icon: Icon, tone }) => {
               const isUsed = value > 0;
               return (

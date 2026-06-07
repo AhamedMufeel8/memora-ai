@@ -1,19 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { StudyProvider} from './context/StudyContext';
 
-// Views
-import { Landing } from './pages/Landing';
-import { Auth } from './pages/Auth';
-import { Dashboard } from './pages/Dashboard';
-import { Summarizer } from './pages/Summarizer';
-import { Flashcards } from './pages/Flashcards';
-import { SmartQuiz } from './pages/SmartQuiz';
-import { TutorChat } from './pages/TutorChat';
-import { BookSection } from './pages/BookSection';
-import { Settings } from './pages/Settings';
+// Views using lazy loading
+const Landing = lazy(() => import('./pages/Landing').then(m => ({ default: m.Landing })));
+const Auth = lazy(() => import('./pages/Auth').then(m => ({ default: m.Auth })));
+const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const Summarizer = lazy(() => import('./pages/Summarizer').then(m => ({ default: m.Summarizer })));
+const Flashcards = lazy(() => import('./pages/Flashcards').then(m => ({ default: m.Flashcards })));
+const SmartQuiz = lazy(() => import('./pages/SmartQuiz').then(m => ({ default: m.SmartQuiz })));
+const TutorChat = lazy(() => import('./pages/TutorChat').then(m => ({ default: m.TutorChat })));
+const BookSection = lazy(() => import('./pages/BookSection').then(m => ({ default: m.BookSection })));
+const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
+
+const PageLoading = () => (
+  <div className="min-h-[400px] flex items-center justify-center bg-transparent">
+    <div className="relative w-10 h-10">
+      <div className="absolute inset-0 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin" />
+    </div>
+  </div>
+);
 
 // Layouts & Reusables
 import { DashboardLayout } from './layouts/DashboardLayout';
@@ -61,22 +69,24 @@ const AppContent = () => {
 
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/auth" element={<Auth />} />
-        
-        {/* Core Dashboard Protected Gates */}
-        <Route path="/dashboard" element={<GateRoute><Dashboard /></GateRoute>} />
-        <Route path="/summarizer" element={<GateRoute><Summarizer /></GateRoute>} />
-        <Route path="/flashcards" element={<GateRoute><Flashcards /></GateRoute>} />
-        <Route path="/quiz" element={<GateRoute><SmartQuiz /></GateRoute>} />
-        <Route path="/chat" element={<GateRoute><TutorChat /></GateRoute>} />
-        <Route path="/books" element={<GateRoute><BookSection /></GateRoute>} />
-        <Route path="/settings" element={<GateRoute><Settings /></GateRoute>} />
-        
-        {/* Wildcard Fallbacks */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<Auth />} />
+          
+          {/* Core Dashboard Protected Gates */}
+          <Route path="/dashboard" element={<GateRoute><Dashboard /></GateRoute>} />
+          <Route path="/summarizer" element={<GateRoute><Summarizer /></GateRoute>} />
+          <Route path="/flashcards" element={<GateRoute><Flashcards /></GateRoute>} />
+          <Route path="/quiz" element={<GateRoute><SmartQuiz /></GateRoute>} />
+          <Route path="/chat" element={<GateRoute><TutorChat /></GateRoute>} />
+          <Route path="/books" element={<GateRoute><BookSection /></GateRoute>} />
+          <Route path="/settings" element={<GateRoute><Settings /></GateRoute>} />
+          
+          {/* Wildcard Fallbacks */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
 
       <ToastContainer />
       <Onboarding isOpen={showTutorial} onClose={handleTutorialClose} />

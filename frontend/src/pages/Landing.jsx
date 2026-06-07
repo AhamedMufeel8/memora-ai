@@ -217,7 +217,7 @@ export const Landing = () => {
 
           {/* Headline */}
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.08] mb-7">
+            className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.08] mb-7">
             <span className="text-white">Study Smarter</span>
             <br />
             <span className="bg-gradient-to-r from-violet-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
@@ -291,7 +291,7 @@ export const Landing = () => {
               <Zap className="w-3 h-3" />
               Core Features
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight">
               Everything You Need<br />
               <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">To Study Smarter</span>
             </h2>
@@ -330,7 +330,7 @@ export const Landing = () => {
               <GraduationCap className="w-3 h-3" />
               How It Works
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight">
               From Upload to <span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Mastery</span>
             </h2>
           </FadeIn>
@@ -365,7 +365,7 @@ export const Landing = () => {
               <Star className="w-3 h-3 fill-amber-400" />
               Student Reviews
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
               Loved by Students
             </h2>
             <p className="text-slate-400 text-sm">See how students are transforming their studies with Memora AI.</p>
@@ -401,7 +401,7 @@ export const Landing = () => {
               <Zap className="w-3 h-3" />
               Simple Pricing
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               Transparent Plans
             </h2>
             <p className="text-slate-400 text-sm">No setup fees, no surprises. Cancel anytime.</p>
@@ -475,7 +475,7 @@ export const Landing = () => {
                   <Sparkles className="w-3 h-3" />
                   Join 50,000+ Students
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight leading-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight leading-tight">
                   Ready to Ace Your<br />
                   <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">Next Exam?</span>
                 </h2>

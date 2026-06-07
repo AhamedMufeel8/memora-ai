@@ -1,12 +1,13 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { PDFParse } = require('pdf-parse');
 const Quiz = require('../models/Quiz');
 const QuizAttempt = require('../models/QuizAttempt');
-const { clampQuestionCount,
-  generateQuizWithGemini,
+const {
+  clampQuestionCount,
+  generateQuiz: generateQuizService,
   normalizeDifficulty,
 } = require('../services/quiz.service');
+const { extractPdfText } = require('../services/pdfExtraction.service');
 
 const MIN_TEXT_LENGTH = 80;
 
@@ -27,45 +28,11 @@ const cleanupFile = async (filePath) => {
   }
 };
 
-const extractPdfText = async (file) => {
-  if (!file?.path) {
-    throw new AppError('Missing PDF file', 400);
-  }
-
-  try {
-    const resolvedPath = path.resolve(file.path);
-    const dataBuffer = await fs.readFile(resolvedPath);
-
-    if (!dataBuffer.length) {
-      throw new AppError('Uploaded PDF is empty', 400);
-    }
-
-    const parser = new PDFParse({ data: dataBuffer });
-    let pdfData;
-
-    try {
-      pdfData = await parser.getText();
-    } finally {
-      await parser.destroy();
-    }
-
-    const text = String(pdfData.text || '').trim();
-    if (!text) {
-      throw new AppError('PDF extraction failed: no readable text found', 422);
-    }
-
-    return text;
-  } catch (error) {
-    if (error.statusCode) throw error;
-    console.error('[Quiz] PDF extraction error:', error);
-    throw new AppError('PDF extraction failed. The file may be corrupted, encrypted, or scanned as images.', 422);
-  }
-};
-
 const resolveSourceText = async (req) => {
   const pastedText = typeof req.body.text === 'string' ? req.body.text.trim() : '';
   if (req.file) {
-    return extractPdfText(req.file);
+    const extraction = await extractPdfText(req.file);
+    return extraction.text;
   }
 
   return pastedText;
@@ -88,7 +55,7 @@ const generateQuiz = async (req, res) => {
       throw new AppError('Please provide at least 80 characters of readable study material.', 400);
     }
 
-    const generated = await generateQuizWithGemini({
+    const generated = await generateQuizService({
       text: sourceText,
       difficulty,
       questionCount,
