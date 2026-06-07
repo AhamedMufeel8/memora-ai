@@ -79,6 +79,7 @@ export const AuthProvider = ({ children }) => {
         };
         setUser(userData);
         localStorage.setItem('ai_study_user', JSON.stringify(userData));
+        sessionStorage.setItem('show_onboarding', 'true');
         setLoading(false);
         return userData;
       } else {
@@ -109,6 +110,7 @@ export const AuthProvider = ({ children }) => {
         };
         setUser(userData);
         localStorage.setItem('ai_study_user', JSON.stringify(userData));
+        sessionStorage.setItem('show_onboarding', 'true');
         setLoading(false);
         return userData;
       } else {
@@ -139,6 +141,7 @@ export const AuthProvider = ({ children }) => {
     Cookies.set('token', 'mock_social_token', { expires: 1 });
     setUser(mockUser);
     localStorage.setItem('ai_study_user', JSON.stringify(mockUser));
+    sessionStorage.setItem('show_onboarding', 'true');
     setLoading(false);
     return mockUser;
   };

@@ -17,24 +17,6 @@ export const Onboarding = ({ isOpen, onClose }) => {
       desc: "Your interactive AI assistant dashboard is prepared. Let's look over your learning widgets quickly.",
       icon: Sparkles,
       color: "text-indigo-500 bg-indigo-500/10"
-    },
-    {
-      title: "1. Upload PDF notes",
-      desc: "Drag and drop standard textbook PDFs in the Notes Summarizer. The AI scans outlines and key definitions automatically.",
-      icon: FileText,
-      color: "text-cyan-500 bg-cyan-500/10"
-    },
-    {
-      title: "2. Practice Flashcards & Quizzes",
-      desc: "Verify learning with 3D flip card revisions and Smart Quizzes with real-time countdown feedback timers.",
-      icon: Award,
-      color: "text-purple-500 bg-purple-500/10"
-    },
-    {
-      title: "3. Listen on the go",
-      desc: "Convert text notes to synthesized audio lesson podcasts. Track page bookmark progress directly inside your Book Library.",
-      icon: Volume2,
-      color: "text-amber-500 bg-amber-500/10"
     }
   ];
 

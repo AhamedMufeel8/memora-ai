@@ -12,7 +12,6 @@ import { Summarizer } from './pages/Summarizer';
 import { Flashcards } from './pages/Flashcards';
 import { SmartQuiz } from './pages/SmartQuiz';
 import { TutorChat } from './pages/TutorChat';
-import { AudioLessons } from './pages/AudioLessons';
 import { BookSection } from './pages/BookSection';
 import { Settings } from './pages/Settings';
 
@@ -49,19 +48,14 @@ const AppContent = () => {
 
   useEffect(() => {
     if (user) {
-      // Check if user has seen onboarding instructions
-      const onboardingSeen = localStorage.getItem(`onboarding_seen_${user.id}`);
-      if (!onboardingSeen) {
-        setTimeout(() => setShowTutorial(true), 0);  
+      if (sessionStorage.getItem('show_onboarding') === 'true') {
+        setTimeout(() => setShowTutorial(true), 0);
+        sessionStorage.removeItem('show_onboarding');
       }
-    
     }
   }, [user]);
 
   const handleTutorialClose = () => {
-    if (user) {
-      localStorage.setItem(`onboarding_seen_${user.id}`, 'true');
-    }
     setShowTutorial(false);
   };
 
@@ -77,7 +71,6 @@ const AppContent = () => {
         <Route path="/flashcards" element={<GateRoute><Flashcards /></GateRoute>} />
         <Route path="/quiz" element={<GateRoute><SmartQuiz /></GateRoute>} />
         <Route path="/chat" element={<GateRoute><TutorChat /></GateRoute>} />
-        <Route path="/audio" element={<GateRoute><AudioLessons /></GateRoute>} />
         <Route path="/books" element={<GateRoute><BookSection /></GateRoute>} />
         <Route path="/settings" element={<GateRoute><Settings /></GateRoute>} />
         

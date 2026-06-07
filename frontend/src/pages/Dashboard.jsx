@@ -48,13 +48,7 @@ const emptyDashboard = {
 };
 
 const metricCards = (overview) => [
-  {
-    label: 'Current Streak',
-    value: `${overview.currentStreak} Day${overview.currentStreak === 1 ? '' : 's'}`,
-    icon: Flame,
-    color: 'text-aiAccent dark:text-amber-500',
-    bg: 'bg-aiPrimary/10 dark:bg-amber-500/10',
-  },
+ 
   {
     label: 'Topics Mastered',
     value: overview.topicsMastered,
@@ -77,7 +71,6 @@ const resourceItems = (usage = {}) => [
   { label: 'Flashcards Created', value: usage.flashcardsCreated || 0, icon: BookOpen, tone: 'emerald' },
   { label: 'Quizzes Taken', value: usage.quizzesTaken || 0, icon: CheckCircle2, tone: 'violet' },
   { label: 'AI Queries', value: usage.aiTutorChats || 0, icon: MessageCircle, tone: 'amber' },
-  { label: 'Audio Lessons Listened', value: usage.audioLessonsListened || 0, icon: Headphones, tone: 'rose' },
 ].sort((a, b) => Number(b.value > 0) - Number(a.value > 0));
 
 const resourceTone = {
@@ -212,7 +205,6 @@ export const Dashboard = () => {
           { name: 'AI Flashcards', icon: BookOpen, to: '/flashcards', color: 'text-aiAccent dark:text-emerald-500', bg: 'bg-aiPrimary/10 dark:bg-emerald-500/10' },
           { name: 'Smart Quizzes', icon: CheckCircle2, to: '/quiz', color: 'text-aiAccent dark:text-violet-500', bg: 'bg-aiPrimary/10 dark:bg-violet-500/10' },
           { name: 'AI Tutor Chat', icon: MessageCircle, to: '/chat', color: 'text-aiAccent dark:text-amber-500', bg: 'bg-aiPrimary/10 dark:bg-amber-500/10' },
-          { name: 'Audio Lessons', icon: Headphones, to: '/audio', color: 'text-aiSecondary dark:text-rose-500', bg: 'bg-aiSecondary/10 dark:bg-rose-500/10' },
           { name: 'Book Library', icon: FileText, to: '/books', color: 'text-aiAccent dark:text-cyan-500', bg: 'bg-aiPrimary/10 dark:bg-cyan-500/10' },
         ].map((feature) => (
           <Link

@@ -37,7 +37,6 @@ export const DashboardLayout = ({ children }) => {
     '/flashcards': 'AI Flashcards',
     '/quiz': 'AI Smart Quiz',
     '/chat': 'AI Tutor Chat',
-    '/audio': 'AI Audio Lessons',
     '/books': 'Book Library',
   }), []);
 
@@ -174,7 +173,6 @@ export const DashboardLayout = ({ children }) => {
     { name: 'AI Flashcards', path: '/flashcards', icon: CreditCard },
     { name: 'AI Smart Quiz', path: '/quiz', icon: Award },
     { name: 'AI Tutor Chat', path: '/chat', icon: MessageSquare },
-    { name: 'AI Audio Lessons', path: '/audio', icon: Volume2 },
     { name: 'Book Library', path: '/books', icon: BookMarked },
     { name: 'Settings', path: '/settings', icon: SettingsIcon },
   ];

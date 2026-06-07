@@ -68,14 +68,7 @@ export const Landing = () => {
       glow: 'shadow-cyan-500/20',
       iconBg: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
     },
-    {
-      icon: Headphones,
-      title: 'AI Audio Lessons',
-      desc: 'Turn study materials into high-fidelity podcast-style lessons. Listen on the go.',
-      accent: 'from-teal-500 to-emerald-500',
-      glow: 'shadow-teal-500/20',
-      iconBg: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
-    },
+
     {
       icon: BookOpen,
       title: 'Book Library',
@@ -246,11 +239,7 @@ export const Landing = () => {
               Start Learning Free
               <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
-            <a href="#features"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-semibold border border-white/10 bg-white/4 hover:bg-white/8 text-slate-300 hover:text-white backdrop-blur-sm transition-all duration-200 text-sm">
-              <Play className="w-4 h-4 fill-slate-400" />
-              See How It Works
-            </a>
+           
           </motion.div>
 
           {/* Social proof micro-strip */}
@@ -534,7 +523,7 @@ export const Landing = () => {
 
             {/* Links */}
             {[
-              { title: 'Platform', links: ['AI Summarizer', 'Flashcards', 'Smart Quiz', 'Audio Lessons', 'Book Library'] },
+              { title: 'Platform', links: ['AI Summarizer', 'Flashcards', 'Smart Quiz', 'Book Library'] },
               { title: 'Resources', links: ['Student Guides', 'API Docs', 'Sample Library', 'Security'] },
               { title: 'Company', links: ['About Us', 'Careers', 'Privacy Policy', 'Terms of Service'] },
             ].map(col => (

@@ -114,14 +114,20 @@ export const Summarizer = () => {
         formData.append('text', notesText);
       }
 
-      const response = await aiService.summarizeNotes(formData, (event) => {
-        if (!event.total) return;
-        const progress = Math.round((event.loaded * 100) / event.total);
-        setUploadProgress(progress);
-        if (progress >= 100) {
-          setProcessingStage('extracting');
-          window.setTimeout(() => setProcessingStage('analyzing'), 650);
-        }
+      const response = await aiService.summarizeNotes(formData, {
+        onUploadProgress: (event) => {
+          if (!event.total) return;
+          const progress = Math.round((event.loaded * 100) / event.total);
+          setUploadProgress(progress);
+          if (progress >= 100) {
+            setProcessingStage('extracting');
+          }
+        },
+        onStage: (stage) => {
+          if (stage === 'extracting' || stage === 'ocr' || stage === 'generating' || stage === 'saving') {
+            setProcessingStage(stage);
+          }
+        },
       });
 
       setProcessingStage('saving');
@@ -148,7 +154,7 @@ export const Summarizer = () => {
       setPreviewUrl('');
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
-      const message = error?.response?.data?.message || error?.message || 'Failed to generate summary. Please try again.';
+      const message = error?.message || 'Failed to generate summary. Please try again.';
       console.error('[Summarizer] Upload/Processing failed:', error);
       if (error?.response?.data) {
         console.error('[Summarizer] Backend Error Data:', error.response.data);
@@ -196,9 +202,11 @@ export const Summarizer = () => {
 
   const stageCopy = {
     idle: 'Ready to analyze',
-    uploading: 'Uploading your PDF...',
-    extracting: 'Extracting readable text...',
-    analyzing: 'AI is analyzing your document...',
+    uploading: 'Uploading PDF...',
+    extracting: 'Extracting text...',
+    ocr: 'Running OCR...',
+    generating: 'Generating summary...',
+    analyzing: 'Generating summary...',
     saving: 'Saving your summary...',
     done: 'Summary ready',
   };
@@ -381,8 +389,16 @@ export const Summarizer = () => {
                     />
                   </div>
                   <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400">
-                    <span>{tempFile ? `${uploadProgress}% uploaded` : 'Text received'}</span>
-                    <span>Extraction and AI analysis continue on the server</span>
+                    <span>
+                      {processingStage === 'uploading' && tempFile
+                        ? `${uploadProgress}% uploaded`
+                        : stageCopy[processingStage] || 'Processing on server'}
+                    </span>
+                    <span>
+                      {processingStage === 'ocr'
+                        ? 'Scanned pages are being read with OCR'
+                        : 'Please keep this page open until processing completes'}
+                    </span>
                   </div>
                 </div>
               </div>

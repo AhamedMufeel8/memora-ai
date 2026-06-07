@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { chunkText } = require('../utils/textPreprocessor');
 
 const DEFAULT_GEMINI_MODELS = [
   'gemini-2.5-flash',
@@ -47,41 +48,16 @@ const buildFallbackSummary = (text) => {
   ].join('\n');
 };
 
-const generateSummary = async (text) => {
-  try {
-    if (!process.env.GEMINI_API_KEY) {
-      console.error('[Gemini] GEMINI_API_KEY is not configured.');
-      return {
-        summary: buildFallbackSummary(text),
-        source: 'fallback',
-      };
-    }
+const SUMMARY_CHUNK_SIZE = 12000;
+const MAX_SUMMARY_CHUNKS = 8;
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-/*
+const buildSummaryPrompt = (text, { part, total } = {}) => {
+  const chunkLabel =
+    part && total
+      ? `\n\nThis is section ${part} of ${total}. Summarize only this section.`
+      : '';
 
-You are an expert teacher.
-
-Your job is to explain study material in very simple English.
-
-Rules:
-1. Write as if teaching a 15-year-old student.
-2. Use easy words and short sentences.
-3. Avoid technical jargon whenever possible.
-4. If a technical term is necessary, explain it in simple English.
-5. Keep the summary concise and easy to understand.
-6. Use bullet points.
-7. Focus only on the most important concepts.
-8. Maximum 10 bullet points.
-9. Add a section called "Quick Revision" with 3-5 key takeaways.
-10. Do not copy large portions of the original text.
-
-Study Material:
-
-${text}
-`;
-*/
-    const prompt = `
+  return `
 
 You are an expert teacher.
 
@@ -94,48 +70,100 @@ Rules:
 5. Keep the summary concise and easy to understand.
 6. Use bullet points.
 7. Focus only on the most important concepts.
-
-
+${chunkLabel}
 
 Notes:
 ${text}
 `;
-    console.log('[Gemini] generateContent request characters:', prompt.length);
-    let result;
-    let lastError;
+};
 
-    for (const modelName of getGeminiModelCandidates()) {
-      try {
-        const model = genAI.getGenerativeModel({ model: modelName });
-        result = await model.generateContent(prompt);
-        console.log('[Gemini] Summary generated with model:', modelName);
-        break;
-      } catch (error) {
-        lastError = error;
-        console.error(`[Gemini] Model failed (${modelName}):`, error.message);
-        if (error.response) console.error('[Gemini] Provider Error Response:', error.response);
-        if (!isModelNotFoundError(error) && !isQuotaError(error)) {
-          throw error;
-        }
+const requestGeminiSummary = async (text, options = {}) => {
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('[Gemini] GEMINI_API_KEY is not configured.');
+    return {
+      summary: buildFallbackSummary(text),
+      source: 'fallback',
+    };
+  }
+
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const prompt = buildSummaryPrompt(text, options);
+  console.log('[Gemini] generateContent request characters:', prompt.length);
+
+  let result;
+  let lastError;
+
+  for (const modelName of getGeminiModelCandidates()) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      result = await model.generateContent(prompt);
+      console.log('[Gemini] Summary generated with model:', modelName);
+      break;
+    } catch (error) {
+      lastError = error;
+      console.error(`[Gemini] Model failed (${modelName}):`, error.message);
+      if (error.response) console.error('[Gemini] Provider Error Response:', error.response);
+      if (!isModelNotFoundError(error) && !isQuotaError(error)) {
+        throw error;
       }
     }
+  }
 
-    if (!result) {
-      if (isQuotaError(lastError)) {
-        throw createQuotaError(lastError);
-      }
-      throw lastError || new Error('No Gemini model was available for summarization');
+  if (!result) {
+    if (isQuotaError(lastError)) {
+      throw createQuotaError(lastError);
+    }
+    throw lastError || new Error('No Gemini model was available for summarization');
+  }
+
+  const response = await result.response;
+  const summary = response.text();
+
+  if (!summary || !summary.trim()) {
+    throw new Error('Gemini returned an empty response');
+  }
+
+  return {
+    summary: summary.trim(),
+    source: 'gemini',
+  };
+};
+
+const generateSummary = async (text) => {
+  try {
+    const chunks = chunkText(text, SUMMARY_CHUNK_SIZE).slice(0, MAX_SUMMARY_CHUNKS);
+
+    if (!chunks.length) {
+      throw new Error('No text available for summarization');
     }
 
-    const response = await result.response;
-    const summary = response.text();
+    if (chunks.length === 1) {
+      return await requestGeminiSummary(chunks[0]);
+    }
 
-    if (!summary || !summary.trim()) {
-      throw new Error('Gemini returned an empty response');
+    console.log('[Gemini] Chunked summarization:', {
+      chunkCount: chunks.length,
+      totalCharacters: text.length,
+    });
+
+    const partialSummaries = [];
+
+    for (let index = 0; index < chunks.length; index += 1) {
+      const chunkResult = await requestGeminiSummary(chunks[index], {
+        part: index + 1,
+        total: chunks.length,
+      });
+      partialSummaries.push(chunkResult.summary);
+    }
+
+    const combinedSummary = partialSummaries.join('\n\n');
+
+    if (combinedSummary.length > SUMMARY_CHUNK_SIZE) {
+      return await requestGeminiSummary(combinedSummary, { part: 1, total: 1 });
     }
 
     return {
-      summary: summary.trim(),
+      summary: combinedSummary,
       source: 'gemini',
     };
   } catch (error) {
@@ -148,5 +176,5 @@ ${text}
 };
 
 module.exports = {
-  generateSummary
+  generateSummary,
 };

@@ -5,7 +5,6 @@ import {
   BookOpen,
   Search,
   Bookmark,
-  Play,
   ChevronRight,
   Sliders
 } from 'lucide-react';
@@ -249,17 +248,7 @@ export const BookSection = () => {
                 {selectedBook.bookmarked ? 'Bookmarked' : 'Add Bookmark'}
               </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  addToast('Audio lesson synthesis loaded!', 'success');
-                  setShowPreviewModal(false);
-                }}
-                className="px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs flex items-center gap-1.5 shadow"
-              >
-                <Play className="w-3.5 h-3.5 fill-white" />
-                Linked Audio summary
-              </button>
+
             </div>
           </div>
         )}
