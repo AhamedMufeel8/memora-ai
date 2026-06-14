@@ -5,15 +5,37 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-primary: 15 107 67;       /* #0F6B43 */
+    --color-primary-hover: 12 90 56;  /* #0C5A38 */
+    --color-background: 245 246 244;  /* #F5F6F4 */
+    --color-card: 255 255 255;        /* #FFFFFF */
+    --color-border: 226 232 240;      /* #E2E8F0 */
+    --color-heading: 15 23 42;        /* #0F172A */
+    --color-body: 100 116 139;        /* #64748B */
+    --color-success: 21 128 61;       /* #15803D */
+  }
+
+  .dark {
+    --color-primary: 16 185 129;      /* #10B981 */
+    --color-primary-hover: 52 211 153;/* #34D399 */
+    --color-background: 15 23 42;     /* #0F172A */
+    --color-card: 30 41 59;           /* #1E293B */
+    --color-border: 51 65 85;         /* #334155 */
+    --color-heading: 248 250 252;     /* #F8FAFC */
+    --color-body: 203 213 225;        /* #CBD5E1 */
+    --color-success: 16 185 129;      /* #10B981 */
+  }
+
   body {
-    @apply font-sans antialiased transition-colors duration-300;
+    @apply font-sans antialiased transition-colors duration-300 bg-bg text-textSecondary dark:bg-bg-dark dark:text-textSecondary-dark;
   }
 }
 
 @layer components {
-  /* Industry-level light UI primitives (dark mode stays via existing `dark:` classes) */
+  /* Premium Light/Dark UI primitives */
   .ai-card {
-    @apply rounded-2xl border border-border bg-white/85 backdrop-blur-md shadow-ai-card;
+    @apply rounded-2xl border border-border bg-card shadow-ai-card dark:border-border-dark dark:bg-card-dark;
   }
 
   .ai-card-hover {
@@ -21,24 +43,24 @@
   }
 
   .ai-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-900;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white;
     @apply bg-ai-cta;
     @apply transition-all duration-200 ease-out;
     @apply hover:shadow-ai-glow-soft active:scale-[0.99];
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiAccent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg dark:focus-visible:ring-primary-dark/50;
   }
 
   .ai-btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold;
-    @apply border border-border bg-white/70 text-textSecondary;
-    @apply transition-colors duration-200 ease-out hover:bg-aiPrimary/10 hover:text-textPrimary;
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiAccent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg;
+    @apply border border-border bg-card/75 text-textSecondary dark:border-border-dark dark:bg-card-dark/75 dark:text-textSecondary-dark;
+    @apply transition-colors duration-200 ease-out hover:bg-primary/10 hover:text-textPrimary dark:hover:bg-primary-dark/10 dark:hover:text-textPrimary-dark;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-lightBg;
   }
 
   .ai-input {
-    @apply w-full rounded-xl border border-border bg-white/80 px-4 py-2.5 text-sm text-textPrimary placeholder:text-slate-400;
+    @apply w-full rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm text-textPrimary placeholder:text-slate-400 dark:border-border-dark dark:bg-card-dark/85 dark:text-textPrimary-dark;
     @apply transition-all duration-200 ease-out;
-    @apply focus:outline-none focus:border-aiAccent/60 focus:ring-2 focus:ring-aiAccent/20;
+    @apply focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 dark:focus:border-primary-dark/60 dark:focus:ring-primary-dark/20;
   }
 }
 
@@ -58,7 +80,7 @@
 
 .glass-panel-light {
   background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 157, 255, 0.14);
+  border: 1px solid rgba(15, 107, 67, 0.14);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -75,12 +97,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 157, 255, 0.25);
+  background: rgba(15, 107, 67, 0.25);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 194, 255, 0.45);
+  background: rgba(15, 107, 67, 0.45);
 }
 
 /* Background animated glow orbs */

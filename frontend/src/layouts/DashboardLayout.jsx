@@ -345,16 +345,10 @@ export const DashboardLayout = ({ children }) => {
           {/* Gamified Widgets (Streak, points, theme, profile) */}
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Streak Widget */}
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-aiPrimary/10 text-textPrimary dark:text-amber-400 border border-aiAccent/25 shadow-sm">
-              <Flame className="w-4 h-4 fill-aiAccent dark:fill-amber-500" />
-              <span className="text-xs font-bold">{streak} Day Streak</span>
-            </div>
+           
 
-            {/* Points XP Widget */}
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-aiPrimary/10 text-aiAccent dark:text-indigo-400 border border-aiAccent/20 dark:border-indigo-500/20 shadow-sm">
-              <Award className="w-4 h-4" />
-              <span className="text-xs font-bold">{points} XP</span>
-            </div>
+            
+            
 
             {/* Theme Toggle Button */}
             <button

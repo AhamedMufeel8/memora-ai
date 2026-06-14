@@ -48,7 +48,11 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
 // Apply rate limiter to all /api routes except analytics (which fires on every nav/unload)
 app.use('/api', (req, res, next) => {
   if (req.path.startsWith('/analytics')) return next();
@@ -59,6 +63,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/auth', require('./routes/googleAuth.routes'));
 app.use('/api/ai', require('./routes/ai.routes'));
 app.use('/api/users', require('./routes/user.routes'));
 app.use('/api/tutor', require('./routes/tutor.routes'));

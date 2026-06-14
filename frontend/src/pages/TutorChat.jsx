@@ -171,9 +171,15 @@ export const TutorChat = () => {
   }, [currentSessionId]);
 
   useEffect(() => {
-    const savedMessages = localStorage.getItem(`messages_${currentSessionId}`);
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
+    if (currentSessionId) {
+      const savedMessages = localStorage.getItem(`messages_${currentSessionId}`);
+      if (savedMessages) {
+        setMessages(JSON.parse(savedMessages));
+      } else {
+        setMessages([]);
+      }
+    } else {
+      setMessages([]);
     }
   }, [currentSessionId]);
 
@@ -198,13 +204,37 @@ export const TutorChat = () => {
     { title: "Quantum Duality Overview", query: "Can you provide a simple explanation and example of wave-particle duality?" }
   ];
 
-  // Fetch session history summaries on mount
+  // Fetch session history summaries on mount and restore last session if valid
   useEffect(() => {
-    fetchSessions();
-    const saved = localStorage.getItem('tutor_currentSessionId');
-    if (saved) {
-      loadSession(saved);
-    }
+    const initializeChat = async () => {
+      try {
+        const response = await tutorService.getSessions();
+        if (response.success) {
+          const fetchedSessions = response.data;
+          setSessions(fetchedSessions);
+          
+          const saved = localStorage.getItem('tutor_currentSessionId');
+          if (saved && fetchedSessions.some(s => s._id === saved)) {
+            await loadSession(saved);
+          } else {
+            // If the saved session ID is invalid or doesn't belong to the user,
+            // clear it and load the most recent session if available, otherwise clear everything
+            localStorage.removeItem('tutor_currentSessionId');
+            if (fetchedSessions.length > 0) {
+              await loadSession(fetchedSessions[0]._id);
+            } else {
+              setCurrentSessionId(null);
+              setMessages([]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Fetch sessions failed:', error);
+        addToast('Failed to load chat history from backend.', 'error');
+      }
+    };
+
+    initializeChat();
   }, []);
 
   // Fetch sessions from the backend
@@ -236,10 +266,15 @@ export const TutorChat = () => {
       if (response.success && response.data) {
         setMessages(response.data.messages || []);
         setStudentLevel(response.data.studentLevel || 'beginner');
+      } else {
+        throw new Error(response.message || 'Failed to fetch session details');
       }
     } catch (error) {
       console.error('Load session details failed:', error);
       addToast('Failed to fetch conversation history.', 'error');
+      setCurrentSessionId(null);
+      setMessages([]);
+      localStorage.removeItem('tutor_currentSessionId');
     } finally {
       setLoadingHistory(false);
     }

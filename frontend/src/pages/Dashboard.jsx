@@ -192,10 +192,7 @@ export const Dashboard = () => {
             A quick overview of your learning activity and progress.
           </h2>
         </div>
-        <Link to="/summarizer" className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-indigo-500 px-4 text-xs font-bold text-white transition-colors hover:bg-indigo-600">
-          Add Study Material
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+       
       </div>
 
       {/* Website Features Quick Links */}
