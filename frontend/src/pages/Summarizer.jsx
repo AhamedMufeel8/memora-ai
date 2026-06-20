@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { useStudy } from '../context/StudyContext';
 import { aiService } from '../services/ai.service';
 import { motion } from 'framer-motion';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import { saveAs } from 'file-saver';
 import { SummarySkeleton } from '../components/Skeleton';
 import {
   UploadCloud,
@@ -22,7 +24,7 @@ import {
 const MAX_PDF_SIZE = 10 * 1024 * 1024;
 
 export const Summarizer = () => {
-  const { documents, uploadDocument, addToast } = useStudy();
+  const { documents, uploadDocument } = useStudy();
   const [dragActive, setDragActive] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -43,12 +45,12 @@ export const Summarizer = () => {
     const isPdfMime = !file.type || file.type === 'application/pdf' || file.type === 'application/x-pdf' || file.type === 'application/octet-stream';
 
     if (!isPdfExtension || !isPdfMime) {
-      addToast('Only PDF files are supported.', 'error');
+      setErrorMessage('Only PDF files are supported.');
       return false;
     }
 
     if (file.size > MAX_PDF_SIZE) {
-      addToast('PDF is too large. Maximum file size is 10MB.', 'error');
+      setErrorMessage('PDF is too large. Maximum file size is 10MB.');
       return false;
     }
 
@@ -96,7 +98,7 @@ export const Summarizer = () => {
 
   const handleProcessSubmit = async () => {
     if (!tempFile && !notesText.trim()) {
-      addToast('Please provide a file or some text notes.', 'error');
+      setErrorMessage('Please provide a file or some text notes.');
       return;
     }
 
@@ -143,7 +145,7 @@ export const Summarizer = () => {
 
       uploadDocument(newDoc);
       setSelectedDoc(newDoc);
-      addToast(response.source === 'fallback' ? 'Summary created with fallback mode. You can retry Gemini later.' : 'AI summary generated successfully!', response.source === 'fallback' ? 'warning' : 'success');
+      
       setProcessingStage('done');
       if (previewUrlRef.current) {
         URL.revokeObjectURL(previewUrlRef.current);
@@ -160,7 +162,6 @@ export const Summarizer = () => {
         console.error('[Summarizer] Backend Error Data:', error.response.data);
       }
       setErrorMessage(message);
-      addToast(message, 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -184,20 +185,46 @@ export const Summarizer = () => {
   const handleCopySummary = async () => {
     if (!selectedDoc?.summary) return;
     await navigator.clipboard.writeText(selectedDoc.summary);
-    addToast('Summary copied to clipboard.', 'success');
+    
   };
 
-  const handleDownloadSummary = () => {
+  const handleDownloadSummary = async () => {
     if (!selectedDoc?.summary) return;
 
-    const blob = new Blob([`# ${selectedDoc.name}\n\n${selectedDoc.summary}`], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${selectedDoc.name.replace(/\.pdf$/i, '') || 'summary'}-summary.md`;
-    link.click();
-    URL.revokeObjectURL(url);
-    addToast('Summary downloaded as Markdown.', 'success');
+    const docName = selectedDoc.name.replace(/\.pdf$/i, '') || 'summary';
+
+    // Split summary into paragraphs for clean .docx formatting
+    const bodyParagraphs = selectedDoc.summary
+      .split('\n')
+      .map(line => line.trim())
+      .map(line =>
+        new Paragraph({
+          children: [new TextRun({ text: line || ' ', size: 24, font: 'Calibri' })],
+          spacing: { after: 160 },
+        })
+      );
+
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              text: docName,
+              heading: HeadingLevel.HEADING_1,
+              spacing: { after: 300 },
+            }),
+            new Paragraph({
+              children: [new TextRun({ text: 'AI-Generated Summary', size: 22, color: '6366F1', bold: true })],
+              spacing: { after: 400 },
+            }),
+            ...bodyParagraphs,
+          ],
+        },
+      ],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, `${docName}-summary.docx`);
   };
 
   const stageCopy = {
@@ -450,7 +477,7 @@ export const Summarizer = () => {
               {/* Tab Display Panel */}
               <div className="py-6 min-h-[300px]">
                 {activeTab === 'summary' && (
-                  <div className="space-y-4 text-xs leading-relaxed text-slate-700 dark:text-slate-350">
+                  <div className="space-y-4 text-xs leading-relaxed text-slate-700 dark:text-slate-200">
                     <p className="whitespace-pre-line font-medium leading-relaxed font-sans">{selectedDoc.summary}</p>
                   </div>
                 )}

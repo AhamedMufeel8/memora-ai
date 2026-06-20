@@ -11,8 +11,6 @@ export const StudyProvider = ({ children }) => {
   // Custom mock data for books, flashcards, quizzes, audio lessons, etc.
   const [documents, setDocuments] = useState([]);
 
-  const [books, setBooks] = useState([]);
-
   const [flashcards, setFlashcards] = useState([]);
 
   const [quizzes] = useState([]);
@@ -67,36 +65,11 @@ export const StudyProvider = ({ children }) => {
     setFlashcards(prev =>
       prev.map(fc => (fc.id === id ? { ...fc, bookmarked: !fc.bookmarked } : fc))
     );
-    addToast('Flashcard bookmark updated!', 'info');
   };
 
   const setDifficultyRating = (id, difficulty) => {
     setFlashcards(prev =>
       prev.map(fc => (fc.id === id ? { ...fc, difficulty } : fc))
-    );
-    addToast(`Tag updated to: ${difficulty}`, 'info');
-  };
-
-  // Book Section actions
-  const toggleBookmarkBook = (id) => {
-    setBooks(prev =>
-      prev.map(bk => (bk.id === id ? { ...bk, bookmarked: !bk.bookmarked } : bk))
-    );
-    addToast('Library bookmark updated!', 'info');
-  };
-
-  const updateBookProgress = (id, pageNum) => {
-    setBooks(prev =>
-      prev.map(bk => {
-        if (bk.id === id) {
-          const nextPercent = Math.min(Math.round((pageNum / bk.pages) * 100), 100);
-          if (nextPercent >= 50 && !achievements.find(a => a.id === 'ach_3').unlocked) {
-            unlockAchievement('ach_3');
-          }
-          return { ...bk, currentPage: pageNum, readPercent: nextPercent };
-        }
-        return bk;
-      })
     );
   };
 
@@ -137,9 +110,6 @@ export const StudyProvider = ({ children }) => {
         removeToast,
         documents,
         uploadDocument,
-        books,
-        toggleBookmarkBook,
-        updateBookProgress,
         flashcards,
         toggleBookmarkFlashcard,
         setDifficultyRating,

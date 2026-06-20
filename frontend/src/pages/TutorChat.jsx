@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useStudy } from '../context/StudyContext';
 import { tutorService } from '../services/tutor.service';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
+import { AlertCircle,
   Send,
   Sparkles,
   Paperclip,
@@ -89,7 +89,7 @@ const MarkdownText = ({ text }) => {
                 // Parse bold strings inside list
                 return (
                   <ul key={lineIdx} className="list-none pl-3 space-y-1">
-                    <li className="flex items-start gap-2 text-slate-700 dark:text-slate-350">
+                    <li className="flex items-start gap-2 text-slate-700 dark:text-slate-200">
                       <span className="text-aiAccent dark:text-cyan-400 mt-1 select-none flex-shrink-0 text-base">•</span>
                       <span>{parseBoldText(listContent)}</span>
                     </li>
@@ -99,7 +99,7 @@ const MarkdownText = ({ text }) => {
 
               // Normal paragraph line
               return (
-                <p key={lineIdx} className="text-slate-700 dark:text-slate-350">
+                <p key={lineIdx} className="text-slate-700 dark:text-slate-200">
                   {parseBoldText(trimmed)}
                 </p>
               );
@@ -123,7 +123,8 @@ const parseBoldText = (text) => {
 };
 
 export const TutorChat = () => {
-  const { documents, books, addToast } = useStudy();
+  const { documents, addToast } = useStudy();
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [sessions, setSessions] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
@@ -230,7 +231,7 @@ export const TutorChat = () => {
         }
       } catch (error) {
         console.error('Fetch sessions failed:', error);
-        addToast('Failed to load chat history from backend.', 'error');
+        setErrorMessage('Failed to load chat history from backend.');
       }
     };
 
@@ -249,7 +250,7 @@ export const TutorChat = () => {
       }
     } catch (error) {
       console.error('Fetch sessions failed:', error);
-      addToast('Failed to load chat history from backend.', 'error');
+      setErrorMessage('Failed to load chat history from backend.');
     }
   };
 
@@ -271,7 +272,7 @@ export const TutorChat = () => {
       }
     } catch (error) {
       console.error('Load session details failed:', error);
-      addToast('Failed to fetch conversation history.', 'error');
+      setErrorMessage('Failed to fetch conversation history.');
       setCurrentSessionId(null);
       setMessages([]);
       localStorage.removeItem('tutor_currentSessionId');
@@ -386,7 +387,7 @@ export const TutorChat = () => {
       if (currentSessionIdRef.current === activeSessionId) {
         setMessages(prev => prev.filter(m => !String(m._id || '').startsWith('temp_')));
       }
-      addToast(error?.message || 'AI Tutor failed to respond. Please check server.', 'error');
+      setErrorMessage(error?.message || 'AI Tutor failed to respond. Please check server.');
     } finally {
       setTypingSessionId(prev => (prev === activeSessionId ? null : prev));
     }
@@ -418,7 +419,7 @@ export const TutorChat = () => {
         }
       } catch (error) {
         console.error('Regenerate failed:', error);
-        addToast('Regeneration failed.', 'error');
+        setErrorMessage('Regeneration failed.');
       } finally {
         setTypingSessionId(prev => (prev === currentSessionId ? null : prev));
       }
@@ -429,9 +430,10 @@ export const TutorChat = () => {
   const handleCopy = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
-      addToast('Copied text response to clipboard!', 'success');
+      // Success toast retained or optionally show a confirmation
+// addToast('Copied text response to clipboard!', 'success');
     } catch {
-      addToast('Failed to copy.', 'error');
+      setErrorMessage('Failed to copy.');
     }
   };
 
@@ -458,7 +460,7 @@ export const TutorChat = () => {
       }
     } catch (error) {
       console.error('Rename failed:', error);
-      addToast('Rename failed.', 'error');
+      setErrorMessage('Rename failed.');
     }
   };
 
@@ -479,7 +481,7 @@ export const TutorChat = () => {
       }
     } catch (error) {
       console.error('Delete failed:', error);
-      addToast('Delete failed.', 'error');
+      setErrorMessage('Delete failed.');
     }
   };
 
@@ -488,7 +490,6 @@ export const TutorChat = () => {
     // Attach the full document object, which includes its AI‑generated summary
     setSelectedAttachment(doc);
     setShowAttachMenu(false);
-    addToast(`Attached ${doc.name} as study reference!`, 'success');
   };
 
   // Filter sessions by search text
@@ -520,6 +521,12 @@ export const TutorChat = () => {
       </div>
 
       {/* Main Panel Content (Sidebar + Active Chat screen) */}
+      {errorMessage && (
+        <div className="mt-2 rounded-xl border border-rose-500/20 bg-rose-500/5 p-4 flex items-start gap-2 text-sm text-rose-600 dark:text-rose-300">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          {errorMessage}
+        </div>
+      )}
       <div className="flex-grow flex items-stretch gap-4 min-h-0 relative">
         
         {/* Sidebar History (Left Panel) */}
@@ -660,7 +667,7 @@ export const TutorChat = () => {
 
               {/* Sidebar Footer info */}
               <div className="p-3 border-t border-slate-100 dark:border-slate-850/60 bg-slate-50/20 dark:bg-slate-950/10 flex items-center justify-between text-[8px] font-bold text-slate-400 tracking-wider uppercase">
-                <span>AI Tutor Model v1.5</span>
+               
                 <span>Active</span>
               </div>
             </motion.div>
@@ -836,51 +843,7 @@ export const TutorChat = () => {
               }}
               className="flex items-center gap-2"
             >
-              {/* Attachment Button */}
-              <div className="relative">
-                <button
-                  type="button"
-                  disabled={isTyping || !currentSessionId}
-                  onClick={() => setShowAttachMenu(!showAttachMenu)}
-                  className={`p-2.5 rounded-xl border transition-colors disabled:opacity-40 ${selectedAttachment
-                      ? 'border-indigo-500 text-indigo-500 bg-indigo-500/5'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-350 bg-white dark:bg-slate-950/10'
-                    }`}
-                  title="Link Study Reference Document"
-                >
-                  <Paperclip className="w-4 h-4" />
-                </button>
-
-                {/* Dropdown document attach lists */}
-                <AnimatePresence>
-                  {showAttachMenu && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute bottom-12 left-0 w-64 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl shadow-lg p-3 z-30"
-                    >
-                      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">Select Study Context</h4>
-                      <div className="space-y-1 max-h-48 overflow-y-auto">
-                        {documents.map(doc => (
-                          <button
-                            key={doc.id}
-                            type="button"
-                            onClick={() => handleAttachContext(doc)}
-                            className="w-full text-left p-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-850 truncate flex items-center gap-2"
-                          >
-                            <FileIcon className="w-3.5 h-3.5 text-indigo-500 flex-shrink-0" />
-                            <span className="truncate">{doc.name}</span>
-                          </button>
-                        ))}
-                        {documents.length === 0 && (
-                          <p className="text-[10px] text-slate-400 text-center py-2">No documents to link.</p>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+             
 
               <input
                 ref={chatInputRef}

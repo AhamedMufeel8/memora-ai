@@ -64,7 +64,7 @@ export const Flashcards = () => {
       setDecks(deckResponse.data || []);
       setProgress(progressResponse.data || null);
     } catch (error) {
-      addToast(error.message || 'Could not load flashcard decks.', 'error');
+      setErrorMessage(error.message || 'Could not load flashcard decks.');
     }
   };
 
@@ -81,11 +81,11 @@ export const Flashcards = () => {
     if (!file) return false;
     const isPdf = file.name.toLowerCase().endsWith('.pdf') && (!file.type || file.type.includes('pdf') || file.type === 'application/octet-stream');
     if (!isPdf) {
-      addToast('Only PDF files are supported.', 'error');
+      setErrorMessage('Only PDF files are supported.');
       return false;
     }
     if (file.size > MAX_PDF_SIZE) {
-      addToast('PDF is too large. Maximum file size is 10MB.', 'error');
+      setErrorMessage('PDF is too large. Maximum file size is 10MB.');
       return false;
     }
     return true;
@@ -101,18 +101,18 @@ export const Flashcards = () => {
 
   const handleGenerate = async () => {
     if (!selectedFile && notesText.trim().length < 80) {
-      addToast('Paste at least 80 characters or upload a PDF.', 'error');
+      setErrorMessage('Paste at least 80 characters or upload a PDF.');
       return;
     }
 
     if (!difficulty) {
-      addToast('Please select a difficulty level.', 'error');
+      setErrorMessage('Please select a difficulty level.');
       return;
     }
 
     const count = parseInt(cardCount, 10);
     if (!count || count < 1 || count > 8) {
-      addToast('Please enter a valid card count between 1 and 8.', 'error');
+      setErrorMessage('Please enter a valid card count between 1 and 8.');
       return;
     }
 
@@ -145,7 +145,7 @@ export const Flashcards = () => {
         console.error('[Flashcards] Backend Error Data:', error.response.data);
       }
       setErrorMessage(message);
-      addToast(message, 'error');
+      setErrorMessage(message);
     } finally {
       setIsGenerating(false);
     }
@@ -164,7 +164,7 @@ export const Flashcards = () => {
       studyStartedAtRef.current = getTimestamp();
       setMode('study');
     } catch (error) {
-      addToast(error.message || 'Could not open flashcard deck.', 'error');
+      setErrorMessage(error.message || 'Could not open flashcard deck.');
     }
   };
 
@@ -191,7 +191,7 @@ export const Flashcards = () => {
       }
       await loadData(search);
     } catch (error) {
-      addToast(error.message || 'Could not save study progress.', 'error');
+      setErrorMessage(error.message || 'Could not save study progress.');
     } finally {
       setIsSavingStudy(false);
     }
@@ -207,13 +207,13 @@ export const Flashcards = () => {
       await loadData(search);
       addToast('Flashcard deck deleted.', 'success');
     } catch (error) {
-      addToast(error.message || 'Could not delete deck.', 'error');
+      setErrorMessage(error.message || 'Could not delete deck.');
     }
   };
 
   const saveRename = async (deck) => {
     if (renameValue.trim().length < 2) {
-      addToast('Deck title is required.', 'error');
+      setErrorMessage('Deck title is required.');
       return;
     }
 
@@ -224,7 +224,7 @@ export const Flashcards = () => {
       await loadData(search);
       addToast('Deck renamed.', 'success');
     } catch (error) {
-      addToast(error.message || 'Could not rename deck.', 'error');
+      setErrorMessage(error.message || 'Could not rename deck.');
     }
   };
 

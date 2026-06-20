@@ -12,7 +12,6 @@ const Summarizer = lazy(() => import('./pages/Summarizer').then(m => ({ default:
 const Flashcards = lazy(() => import('./pages/Flashcards').then(m => ({ default: m.Flashcards })));
 const SmartQuiz = lazy(() => import('./pages/SmartQuiz').then(m => ({ default: m.SmartQuiz })));
 const TutorChat = lazy(() => import('./pages/TutorChat').then(m => ({ default: m.TutorChat })));
-const BookSection = lazy(() => import('./pages/BookSection').then(m => ({ default: m.BookSection })));
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
 
 const PageLoading = () => (
@@ -80,7 +79,6 @@ const AppContent = () => {
           <Route path="/flashcards" element={<GateRoute><Flashcards /></GateRoute>} />
           <Route path="/quiz" element={<GateRoute><SmartQuiz /></GateRoute>} />
           <Route path="/chat" element={<GateRoute><TutorChat /></GateRoute>} />
-          <Route path="/books" element={<GateRoute><BookSection /></GateRoute>} />
           <Route path="/settings" element={<GateRoute><Settings /></GateRoute>} />
           
           {/* Wildcard Fallbacks */}

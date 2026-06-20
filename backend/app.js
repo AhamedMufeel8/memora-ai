@@ -73,7 +73,6 @@ app.use('/api/flashcards', require('./routes/flashcard.routes'));
 app.use('/api/quiz', require('./routes/quiz.routes'));
 app.use('/api/quizzes', require('./routes/quiz.routes'));
 app.use('/api/chat', require('./routes/chat.routes'));
-app.use('/api/books', require('./routes/book.routes'));
 app.use('/api/uploads', require('./routes/upload.routes'));
 app.use('/api/analytics', require('./routes/analytics.routes'));
 

@@ -38,7 +38,6 @@ export const DashboardLayout = ({ children }) => {
     '/flashcards': 'AI Flashcards',
     '/quiz': 'AI Smart Quiz',
     '/chat': 'AI Tutor Chat',
-    '/books': 'Book Library',
   }), []);
 
   const activeSessionIdRef = useRef(null);
@@ -173,7 +172,6 @@ export const DashboardLayout = ({ children }) => {
     { name: 'AI Flashcards', path: '/flashcards', icon: CreditCard },
     { name: 'AI Smart Quiz', path: '/quiz', icon: Award },
     { name: 'AI Tutor Chat', path: '/chat', icon: MessageSquare },
-    { name: 'Book Library', path: '/books', icon: BookMarked },
     { name: 'Settings', path: '/settings', icon: SettingsIcon },
   ];
 
@@ -358,13 +356,7 @@ export const DashboardLayout = ({ children }) => {
               {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-aiAccent dark:text-indigo-600" />}
             </button>
 
-            {/* Notifications Button */}
-            <div className="relative">
-              <button className="p-2 rounded-xl border border-border dark:border-slate-800 text-textSecondary dark:text-slate-400 hover:bg-aiPrimary/5 dark:hover:bg-slate-800 transition-colors">
-                <Bell className="w-4 h-4" />
-              </button>
-              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-aiAccent/80 dark:bg-cyan-500 shadow-ai-glow-soft dark:shadow-neon-cyan animate-pulse" />
-            </div>
+           
 
             {/* Micro User Avatar */}
             <img

@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  Zap, Sparkles, ChevronRight, Star, Play,
-  Volume2, Award, FileText, ArrowRight,
-  BookOpen, MessageSquare, CheckCircle2,
-  Users, TrendingUp, Shield, Brain, Headphones,
-  GraduationCap, Menu, X
+  Zap, Sparkles, ChevronRight, Star,
+  Award, FileText, ArrowRight,
+  MessageSquare, CheckCircle2,
+  Users, TrendingUp, Shield, Brain,
+  GraduationCap, Menu, X, ArrowUpRight
 } from 'lucide-react';
 
-/* ─── Fade-in animation helper ─── */
+/* ─── Smooth Animation Helper ─── */
 const FadeIn = ({ children, delay = 0, className = '' }) => (
   <motion.div
-    initial={{ opacity: 0, y: 22 }}
+    initial={{ opacity: 0, y: 12 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-60px' }}
-    transition={{ duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+    viewport={{ once: true, margin: '-40px' }}
+    transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
     className={className}
   >
     {children}
@@ -28,9 +28,8 @@ export const Landing = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
-  /* Navbar glass-on-scroll */
   useEffect(() => {
-    const onScroll = () => setNavScrolled(window.scrollY > 30);
+    const onScroll = () => setNavScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -39,263 +38,185 @@ export const Landing = () => {
     {
       icon: FileText,
       title: 'AI Note Summarizer',
-      desc: 'Drop heavy PDF textbooks and get crisp, structured summaries with key definitions in seconds.',
-      accent: 'from-emerald-700 to-emerald-500',
-      glow: 'shadow-emerald-600/10',
+      desc: 'Upload 100-page textbooks or lecture PDFs and get clear, structured study guides with key definitions in seconds.',
       iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
     },
     {
       icon: Sparkles,
-      title: 'AI Flashcard Decks',
-      desc: 'AI builds study cards from your notes automatically. Practice with 3D flip dynamics.',
-      accent: 'from-emerald-600 to-emerald-400',
-      glow: 'shadow-emerald-500/10',
+      title: 'Smart Flashcards',
+      desc: 'Automatically generate flashcards from your notes and reinforce learning through active recall.',
       iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
     },
     {
       icon: Award,
-      title: 'Smart MCQ Quizzes',
-      desc: 'Custom MCQ and True/False assessments with timers, scoring, and instant feedback.',
-      accent: 'from-emerald-550 to-green-400',
-      glow: 'shadow-emerald-500/10',
+      title: 'Practice Quizzes',
+      desc: 'Test your understanding with AI-generated questions tailored to your study materials.',
       iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
     },
     {
       icon: MessageSquare,
-      title: '24/7 AI Tutor Chat',
-      desc: 'Chat with an AI expert coach that references your uploaded books for precise answers.',
-      accent: 'from-green-600 to-emerald-500',
-      glow: 'shadow-emerald-500/10',
+      title: '24/7 AI Study Tutor',
+      desc: 'Ask questions, get explanations, and learn difficult concepts with a tutor that understands your documents.',
       iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    },
-
-    {
-      icon: BookOpen,
-      title: 'Book Library',
-      desc: 'Your personal study shelf. Bookmark, annotate, and track reading progress.',
-      accent: 'from-emerald-650 to-teal-500',
-      glow: 'shadow-emerald-500/10',
-      iconBg: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    },
+    }
   ];
 
   const stats = [
     { value: '50K+', label: 'Active Students', icon: Users },
-    { value: '2M+', label: 'Summaries Generated', icon: FileText },
-    { value: '98%', label: 'Satisfaction Rate', icon: TrendingUp },
-    { value: 'SOC2', label: 'Security Certified', icon: Shield },
+    { value: '2M+', label: 'Study Guides Created', icon: FileText },
+    { value: '98%', label: 'Higher Exam Scores', icon: TrendingUp },
+    { value: 'Safe', label: '100% Secure Data', icon: Shield },
   ];
 
   const testimonials = [
     {
-      quote: "The PDF summarizer saved me during finals. I dropped 60-page biology decks and got complete outlines and quizzes instantly!",
+      quote: "The PDF summarizer completely saved me during biology finals. I uploaded massive lecture slide decks and got clean outlines and quick practice questions immediately.",
       name: 'Sarah Jenkins',
-      role: 'Pre-Med Undergrad',
+      role: 'Pre-Med Student',
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=128&h=128&fit=crop',
       stars: 5,
     },
     {
-      quote: "Converting notes to audio podcasts is a game changer. I listen on my commute and review flashcards on the way back.",
+      quote: "Generating custom flashcard decks straight from my class notes has cut my preparation time in half. It isolates what I need to study perfectly.",
       name: 'Marcus Vance',
-      role: 'CS Sophomore',
+      role: 'Computer Science Sophomore',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=128&h=128&fit=crop',
       stars: 5,
     },
     {
-      quote: "Having an AI Tutor linked directly to my textbooks is incredible. Instant, precise, contextual explanations every time.",
+      quote: "The dashboard layout is simple and gorgeous. Having an AI chat assistant that remembers my exact textbook chapters makes getting stuck impossible.",
       name: 'Elena Rostova',
-      role: 'Postgrad Researcher',
+      role: 'Graduate Researcher',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=128&h=128&fit=crop',
       stars: 5,
     },
   ];
 
-  const pricingPlans = [
-    {
-      name: 'Starter',
-      price: billingCycle === 'monthly' ? '9' : '7',
-      desc: 'For individuals exploring AI-powered study.',
-      features: ['10 PDF uploads / mo', 'AI Summary Generator', '50 AI Flashcards', 'Smart Quiz access', 'Email support'],
-      cta: 'Get Started Free',
-      highlight: false,
-    },
-    {
-      name: 'Scholar Pro',
-      price: billingCycle === 'monthly' ? '19' : '15',
-      desc: 'Full power for high-performing students.',
-      features: ['Unlimited PDF uploads', 'Deep Chapter Analysis', 'Unlimited Flashcards', 'AI Chat Tutor + Books', 'Podcast Synthesis', 'Priority model access'],
-      cta: 'Start Pro Trial',
-      highlight: true,
-    },
-    {
-      name: 'Team',
-      price: billingCycle === 'monthly' ? '49' : '39',
-      desc: 'For institutions, study groups & classrooms.',
-      features: ['Everything in Pro', 'Shared study spaces', 'Teacher analytics', 'API integrations', '24/7 Slack support'],
-      cta: 'Contact Sales',
-      highlight: false,
-    },
-  ];
-
   return (
-    <div className="bg-[#0f172a] text-slate-150 font-sans min-h-screen overflow-x-hidden selection:bg-emerald-500/25">
+    <div className="bg-[#030712] text-slate-200 font-sans min-h-screen overflow-x-hidden selection:bg-emerald-500/30 tracking-tight antialiased">
 
-      {/* ── Ambient background ── */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-200px] left-[-200px] w-[700px] h-[700px] bg-emerald-600/8 rounded-full blur-[120px]" />
-        <div className="absolute top-[30%] right-[-200px] w-[600px] h-[600px] bg-emerald-600/6 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[20%] w-[500px] h-[500px] bg-emerald-600/5 rounded-full blur-[120px]" />
-        {/* Fine grid texture */}
-        <div className="absolute inset-0 opacity-[0.02]"
-          style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)', backgroundSize: '80px 80px' }} />
+      {/* ── Premium Ambient Background Blur ── */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-250px] left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-emerald-500/10 to-transparent rounded-full blur-[140px] opacity-70" />
+        <div className="absolute top-[35%] right-[-100px] w-[500px] h-[500px] bg-emerald-600/5 rounded-full blur-[120px]" />
+        <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
       </div>
 
-      {/* ══════════════════════════ NAVBAR ══════════════════════════ */}
-      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${navScrolled ? 'bg-[#0f172a]/85 backdrop-blur-xl border-b border-white/[0.06] shadow-2xl' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Logo */}
+      {/* ══════════════════════════ NAVIGATION BAR ══════════════════════════ */}
+      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${navScrolled ? 'bg-[#030712]/80 backdrop-blur-xl border-b border-white/[0.06] shadow-xl' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-              <Brain className="w-4 h-4 text-white" />
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+              <Brain className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-bold text-lg text-white tracking-tight">
-              Memora <span className="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent">AI</span>
+            <span className="font-bold text-base text-white tracking-tight">
+              Memora <span className="text-emerald-400 font-medium">AI</span>
             </span>
           </div>
 
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
             {['Features', 'Pricing', 'Testimonials'].map(link => (
-              <a key={link} href={`#${link.toLowerCase()}`}
-                className="text-sm font-medium text-slate-400 hover:text-white transition-colors duration-200">
+              <a key={link} href={`#${link.toLowerCase()}`} className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
                 {link}
               </a>
             ))}
           </nav>
 
-          {/* CTA buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link to="/auth?mode=login"
-              className="text-sm font-semibold text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-xl hover:bg-white/5">
+          <div className="hidden md:flex items-center gap-4">
+            <Link to="/auth?mode=login" className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
               Sign In
             </Link>
-            <Link to="/auth?mode=signup"
-              className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-500 hover:to-emerald-400 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-200 active:scale-[0.98]">
+            <Link to="/auth?mode=signup" className="text-xs font-bold px-4 py-2 rounded-lg bg-white text-black hover:bg-slate-100 transition-all shadow-md">
               Start Free
             </Link>
           </div>
 
-          {/* Mobile menu toggle */}
           <button className="md:hidden p-2 text-slate-400 hover:text-white" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
-
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-[#111827]/95 backdrop-blur-xl border-t border-white/[0.06] px-6 py-6 space-y-4">
-            {['Features', 'Pricing', 'Testimonials'].map(link => (
-              <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMobileOpen(false)}
-                className="block text-sm font-medium text-slate-300 hover:text-white py-1">
-                {link}
-              </a>
-            ))}
-            <div className="pt-2 flex flex-col gap-2">
-              <Link to="/auth?mode=login" className="text-center py-2.5 rounded-xl border border-white/10 text-sm text-slate-300">Sign In</Link>
-              <Link to="/auth?mode=signup" className="text-center py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm font-bold">Start Free</Link>
-            </div>
-          </motion.div>
-        )}
       </header>
 
-      {/* ══════════════════════════ HERO ══════════════════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 pb-24 px-6">
-        <div className="max-w-5xl mx-auto text-center relative z-10">
+      {/* ══════════════════════════ HERO SUITE (CENTER ALIGNED) ══════════════════════════ */}
+      <section className="relative pt-40 pb-28 px-6 z-10 text-center">
+        <div className="max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6">
+          
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-[11px] font-bold tracking-wide uppercase">
+            <Zap className="w-3 h-3 fill-current" /> Study Smarter, Save Hours
+          </div>
 
-         
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.1] max-w-3xl">
+            Your notes.<br />
+            Organized by AI in <span className="bg-gradient-to-r from-emerald-400 via-emerald-300 to-teal-200 bg-clip-text text-transparent">seconds.</span>
+          </h1>
 
-          {/* Headline */}
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.08] mb-7">
-            <span className="text-white">Study Smarter</span>
-            <br />
-            <span className="bg-gradient-to-r from-emerald-450 via-emerald-500 to-emerald-300 bg-clip-text text-transparent">
-              Not Harder.
-            </span>
-          </motion.h1>
+          <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-2xl font-light">
+          Upload PDFs, textbooks, lecture notes, or slides. Instantly generate summaries, flashcards, quizzes, and AI-powered tutoring from your study materials.
+          </p>
 
-          {/* Subheading */}
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-            Upload notes, generate AI summaries, create flashcards, take quizzes, and chat with your personal AI tutor — all in one elegant platform.
-          </motion.p>
-
-          {/* CTA Row */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <button onClick={() => navigate('/auth?mode=signup')}
-              className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300 active:scale-[0.97] text-sm">
-              Start Learning Free
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          <div className="pt-4 w-full sm:w-auto min-w-[240px]">
+            <button onClick={() => navigate('/auth?mode=signup')} className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-xs text-black bg-emerald-400 hover:bg-emerald-300 transition-all shadow-lg shadow-emerald-400/10">
+              Create Free Account
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </button>
-           
-          </motion.div>
+          </div>
 
-         
         </div>
-
-  
-      
       </section>
 
-      {/* ══════════════════════════ STATS STRIP ══════════════════════════ */}
-      <section className="relative z-10 border-y border-white/[0.05] bg-[#111827]/60 backdrop-blur-md py-12">
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+      {/* ══════════════════════════ TRUSTED BY STRIP ══════════════════════════ */}
+      <section className="relative z-10 border-y border-white/[0.06] bg-[#070b14]/70 backdrop-blur-md py-10">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <FadeIn key={i} delay={i * 0.08} className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Icon className="w-5 h-5 text-emerald-400 mr-2" />
-                  <span className="text-3xl font-extrabold text-white tracking-tight">{stat.value}</span>
+              <FadeIn key={i} delay={i * 0.05} className="text-center md:text-left md:border-l md:border-white/[0.06] md:pl-6 first:border-none flex flex-col items-center md:items-start justify-center">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <Icon className="w-4 h-4 text-emerald-400" />
+                  <span className="text-2xl font-black text-white tracking-tight">{stat.value}</span>
                 </div>
-                <p className="text-xs text-slate-500 font-medium">{stat.label}</p>
+                <p className="text-[11px] text-slate-400 font-medium uppercase tracking-wider">{stat.label}</p>
               </FadeIn>
             );
           })}
         </div>
       </section>
 
-      {/* ══════════════════════════ FEATURES ══════════════════════════ */}
+      {/* ══════════════════════════ THE CORE FEATURES ══════════════════════════ */}
       <section id="features" className="relative z-10 py-24 md:py-32 px-6">
         <div className="max-w-7xl mx-auto">
-          <FadeIn className="text-center max-w-2xl mx-auto mb-18">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/6 text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-5">
-              <Zap className="w-3 h-3" />
-              Core Features
+          
+          <FadeIn className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+              <Zap className="w-3 h-3" /> Built For Fast Learning
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight">
-              Everything You Need<br />
-              <span className="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent">To Study Smarter</span>
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              Everything You Need to Study Smarter
             </h2>
-            <p className="text-slate-400 leading-relaxed">From understanding concepts to acing exams, Memora AI gives you a complete intelligent study system.</p>
+            <p className="text-slate-400 text-xs md:text-sm max-w-md mx-auto font-light leading-relaxed">
+             One platform for summarizing, practicing, revising, and learning faster.
+            </p>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-14">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
             {features.map((feat, idx) => {
               const Icon = feat.icon;
               return (
-                <FadeIn key={idx} delay={idx * 0.07}>
+                <FadeIn key={idx} delay={idx * 0.05}>
                   <Link to="/auth?mode=signup" className="block h-full group">
-                    <div className={`h-full p-7 rounded-2xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.12] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${feat.glow}`}>
-                      <div className={`w-11 h-11 rounded-xl border flex items-center justify-center mb-5 ${feat.iconBg}`}>
-                        <Icon className="w-5 h-5" />
+                    <div className="h-full p-6 rounded-xl border border-white/[0.06] bg-white/[0.01] hover:bg-white/[0.03] hover:border-white/[0.12] transition-all duration-300 flex flex-col justify-between group-hover:-translate-y-1">
+                      <div>
+                        <div className={`w-9 h-9 rounded-lg border flex items-center justify-center mb-4 ${feat.iconBg}`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <h3 className="text-sm font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors flex items-center gap-1">
+                          {feat.title}
+                          <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all text-emerald-400" />
+                        </h3>
+                        <p className="text-slate-400 text-xs leading-relaxed font-light">{feat.desc}</p>
                       </div>
-                      <h3 className="text-base font-bold text-white mb-2.5 group-hover:text-emerald-300 transition-colors">{feat.title}</h3>
-                      <p className="text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
-                      <div className="mt-5 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 group-hover:text-emerald-400 transition-colors">
-                        Explore feature <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      <div className="mt-5 text-[10px] font-bold tracking-wider uppercase text-slate-400 group-hover:text-slate-200 transition-colors">
+                        Try Feature Free
                       </div>
                     </div>
                   </Link>
@@ -303,178 +224,166 @@ export const Landing = () => {
               );
             })}
           </div>
+          
         </div>
       </section>
 
-      {/* ══════════════════════════ HOW IT WORKS ══════════════════════════ */}
-      <section className="relative z-10 py-24 md:py-28 px-6 border-t border-white/[0.05]">
+      {/* ══════════════════════════ SIMPLE SYSTEM STEP ARRAY ══════════════════════════ */}
+      <section className="relative z-10 py-24 px-6 border-t border-white/[0.06] bg-slate-950/20">
         <div className="max-w-5xl mx-auto">
-          <FadeIn className="text-center max-w-xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/6 text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-5">
-              <GraduationCap className="w-3 h-3" />
-              How It Works
+          
+          <FadeIn className="text-center max-w-xl mx-auto mb-16 space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+              <GraduationCap className="w-3 h-3" /> Three Easy Steps
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight">
-              From Upload to <span className="bg-gradient-to-r from-emerald-450 to-emerald-300 bg-clip-text text-transparent">Mastery</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              How Memora Works
             </h2>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-6">
             {[
-              { step: '01', title: 'Upload Your Material', desc: 'Drag & drop any PDF — textbooks, lecture notes, research papers. We handle the rest.', icon: FileText, color: 'text-emerald-400' },
-              { step: '02', title: 'AI Processes & Creates', desc: 'Our Gemini AI engine generates summaries, flashcards, quizzes, and audio lessons automatically.', icon: Brain, color: 'text-emerald-400' },
-              { step: '03', title: 'Learn & Retain', desc: 'Chat with your AI tutor, quiz yourself, and track your progress with detailed analytics.', icon: TrendingUp, color: 'text-emerald-400' },
+              { step: '1', title: 'Upload ', desc: 'Drag and drop any PDFs, textbooks, lecture notes, or presentations.Everything works cleanly.', icon: FileText },
+              { step: '2', title: 'Process', desc: 'AI analyzes your content and creates summaries, flashcards, quizzes, and study resources.', icon: Brain },
+              { step: '3', title: 'Learn ', desc: 'Review faster, practice smarter, and track your progress from one dashboard.', icon: TrendingUp },
             ].map((step, i) => {
               const Icon = step.icon;
               return (
-                <FadeIn key={i} delay={i * 0.12}>
-                  <div className="relative p-7 rounded-2xl border border-white/[0.07] bg-white/[0.03] backdrop-blur-sm h-full">
-                    <div className="absolute top-6 right-6 text-5xl font-black text-white/[0.04] select-none">{step.step}</div>
-                    <Icon className={`w-7 h-7 mb-5 ${step.color}`} />
-                    <h3 className="font-bold text-white text-base mb-2">{step.title}</h3>
-                    <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
+                <FadeIn key={i} delay={i * 0.06}>
+                  <div className="relative p-6 rounded-xl border border-white/[0.06] bg-slate-900/10 backdrop-blur-sm h-full">
+                    <div className="absolute top-4 right-4 text-3xl font-black text-white/[0.02] font-mono select-none">{step.step}</div>
+                    <Icon className="w-5 h-5 mb-4 text-emerald-400" />
+                    <h3 className="font-bold text-white text-sm mb-1.5">{step.title}</h3>
+                    <p className="text-slate-400 text-xs leading-relaxed font-light">{step.desc}</p>
                   </div>
                 </FadeIn>
               );
             })}
           </div>
+          
         </div>
       </section>
 
-      {/* ══════════════════════════ TESTIMONIALS ══════════════════════════ */}
-      <section id="testimonials" className="relative z-10 py-24 md:py-28 px-6 border-t border-white/[0.05]">
+      {/* ══════════════════════════ REVIEWS FROM REAL USERS ══════════════════════════ */}
+      <section id="testimonials" className="relative z-10 py-24 px-6 border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto">
-          <FadeIn className="text-center max-w-xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/20 bg-amber-500/6 text-amber-400 text-[10px] font-bold uppercase tracking-widest mb-5">
-              <Star className="w-3 h-3 fill-amber-400" />
-              Student Reviews
+          
+          <FadeIn className="text-center max-w-xl mx-auto mb-16 space-y-2">
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-amber-500/20 bg-amber-500/5 text-amber-400 text-[10px] font-bold uppercase tracking-wider">
+              <Star className="w-2.5 h-2.5 fill-amber-400" /> Real Student Reviews
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
-              Loved by Students
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Trusted by Students Everywhere
             </h2>
-            <p className="text-slate-400 text-sm">See how students are transforming their studies with Memora AI.</p>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div className="p-7 rounded-2xl border border-white/[0.07] bg-white/[0.03] backdrop-blur-sm hover:border-white/[0.12] transition-all duration-300 h-full flex flex-col">
-                  <div className="flex gap-1 mb-5">
-                    {[...Array(t.stars)].map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+              <FadeIn key={i} delay={i * 0.05}>
+                <div className="p-6 rounded-xl border border-white/[0.06] bg-white/[0.01] h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex gap-0.5 mb-4 justify-start">
+                      {[...Array(t.stars)].map((_, j) => <Star key={j} className="w-3 h-3 fill-amber-400 text-amber-400" />)}
+                    </div>
+                    <p className="text-slate-300 text-xs leading-relaxed mb-6 font-light">"{t.quote}"</p>
                   </div>
-                  <p className="text-slate-300 text-sm leading-relaxed flex-grow mb-6 italic">"{t.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
-                    <div>
-                      <p className="text-sm font-bold text-white">{t.name}</p>
-                      <p className="text-xs text-slate-500">{t.role}</p>
+                  <div className="flex items-center gap-3 border-t border-white/[0.04] pt-4">
+                    <img src={t.avatar} alt={t.name} className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                    <div className="text-left">
+                      <p className="text-xs font-bold text-white">{t.name}</p>
+                      <p className="text-[10px] text-slate-500">{t.role}</p>
                     </div>
                   </div>
                 </div>
               </FadeIn>
             ))}
           </div>
+          
         </div>
       </section>
 
-      {/* ══════════════════════════ PRICING ══════════════════════════ */}
-      <section id="pricing" className="relative z-10 py-24 md:py-28 px-6 border-t border-white/[0.05]">
+      {/* ══════════════════════════ SIMPLE PRICING SYSTEM ══════════════════════════ */}
+      <section id="pricing" className="relative z-10 py-24 px-6 border-t border-white/[0.06] bg-slate-950/20">
         <div className="max-w-6xl mx-auto">
-          <FadeIn className="text-center max-w-xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/6 text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-5">
-              <Zap className="w-3 h-3" />
-              Simple Pricing
+          
+          <FadeIn className="text-center max-w-xl mx-auto mb-12 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+              <Zap className="w-3 h-3" /> Simple Pricing Plans
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-              Transparent Plans
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Fair plans, cancel anytime
             </h2>
-            <p className="text-slate-400 text-sm">No setup fees, no surprises. Cancel anytime.</p>
 
-            {/* Billing toggle */}
-            <div className="inline-flex items-center gap-1 mt-8 p-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+            <div className="inline-flex items-center gap-1 mt-4 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               {['monthly', 'annual'].map(cycle => (
-                <button key={cycle} onClick={() => setBillingCycle(cycle)}
-                  className={`px-5 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${billingCycle === cycle ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'text-slate-400 hover:text-white'}`}>
-                  {cycle === 'monthly' ? 'Monthly' : 'Annual · Save 20%'}
+                <button key={cycle} onClick={() => setBillingCycle(cycle)} className={`px-4 py-1.5 rounded-lg text-[11px] font-bold transition-all ${billingCycle === cycle ? 'bg-white text-black shadow-md' : 'text-slate-400 hover:text-white'}`}>
+                  {cycle === 'monthly' ? 'Monthly' : 'Annual (Save 20%)'}
                 </button>
               ))}
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
-            {pricingPlans.map((plan, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div className={`relative h-full p-8 rounded-2xl border flex flex-col transition-all duration-300 ${plan.highlight
-                  ? 'border-emerald-500/50 bg-gradient-to-b from-emerald-550/10 via-emerald-500/5 to-transparent shadow-2xl shadow-emerald-550/15 scale-[1.02]'
-                  : 'border-white/[0.07] bg-white/[0.03]'}`}>
-                  {plan.highlight && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                      <span className="px-3.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg">
-                        Most Popular
-                      </span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-4xl mx-auto">
+            {[
+              { name: 'Starter Tier', price: billingCycle === 'monthly' ? '9' : '7', desc: 'Perfect for exploring simple AI study sets.', features: ['10 PDF uploads every month', 'AI Summary generator node', '50 smart custom flashcards'], highlight: false },
+              { name: 'Scholar Pro', price: billingCycle === 'monthly' ? '19' : '15', desc: 'Unrestricted access for full-time students.', features: ['Unlimited notebook uploads', 'Deep multi-chapter analysis', 'Unlimited smart flashcards', '24/7 AI tutor chatbot connected'], highlight: true },
+              { name: 'Study Groups', price: billingCycle === 'monthly' ? '49' : '39', desc: 'Integrated options for collaborative classes.', features: ['Everything included in Pro tier', 'Shared spaces for group work', 'Team activity tracking panel'], highlight: false }
+            ].map((plan, i) => (
+              <FadeIn key={i} delay={i * 0.05}>
+                <div className={`relative h-full p-6 rounded-xl border flex flex-col justify-between transition-all text-left ${plan.highlight ? 'border-emerald-500 bg-emerald-500/[0.02] shadow-xl' : 'border-white/[0.06] bg-[#070a13]'}`}>
+                  <div>
+                    <div className="mb-4">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-1">{plan.name}</h3>
+                      <p className="text-[11px] text-slate-400 leading-normal font-light">{plan.desc}</p>
                     </div>
-                  )}
-                  <div className="mb-6">
-                    <h3 className="text-base font-bold text-white mb-1">{plan.name}</h3>
-                    <p className="text-xs text-slate-500 mb-4">{plan.desc}</p>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-slate-500 text-lg">$</span>
-                      <span className="text-5xl font-extrabold text-white tracking-tighter">{plan.price}</span>
-                      <span className="text-slate-500 text-sm">/ mo</span>
+                    <div className="flex items-baseline gap-1 mb-4">
+                      <span className="text-slate-500 text-xs">$</span>
+                      <span className="text-4xl font-black text-white tracking-tight">{plan.price}</span>
+                      <span className="text-slate-500 text-[11px]">/mo</span>
                     </div>
+                    <div className="h-px bg-white/[0.06] mb-4" />
+                    <ul className="space-y-2 mb-6">
+                      {plan.features.map((f, j) => (
+                        <li key={j} className="flex items-start gap-2 text-xs text-slate-300 font-light">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="w-full h-px bg-white/[0.06] mb-6" />
-                  <ul className="space-y-3 mb-8 flex-grow">
-                    {plan.features.map((f, j) => (
-                      <li key={j} className="flex items-start gap-2.5 text-sm text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-450 flex-shrink-0 mt-0.5" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <button onClick={() => navigate('/auth?mode=signup')}
-                    className={`w-full py-3 rounded-xl font-bold text-sm transition-all duration-200 active:scale-[0.97] ${plan.highlight
-                      ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-500 hover:to-emerald-450 shadow-lg shadow-emerald-500/20'
-                      : 'border border-white/10 text-slate-300 hover:bg-white/6 hover:text-white'}`}>
-                    {plan.cta}
+                  <button onClick={() => navigate('/auth?mode=signup')} className={`w-full py-2.5 rounded-lg font-bold text-xs transition-all ${plan.highlight ? 'bg-emerald-400 text-black hover:bg-emerald-350 shadow-md' : 'border border-white/10 text-slate-300 hover:bg-white/5'}`}>
+                    Choose Plan
                   </button>
                 </div>
               </FadeIn>
             ))}
           </div>
+          
         </div>
       </section>
 
-      {/* ══════════════════════════ FINAL CTA ══════════════════════════ */}
-      <section className="relative z-10 py-24 px-6 border-t border-white/[0.05]">
+      {/* ══════════════════════════ CONVERSION ACTION ACCORDION ══════════════════════════ */}
+      <section className="relative z-10 py-24 px-6 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto">
           <FadeIn>
-            <div className="relative rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 via-[#0f172a] to-emerald-900/30 p-12 md:p-18 text-center overflow-hidden shadow-2xl">
-              {/* Glow */}
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-emerald-500/15 rounded-full blur-[80px]" />
-              </div>
-              <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/8 text-emerald-300 text-[10px] font-bold uppercase tracking-widest mb-7">
-                  <Sparkles className="w-3 h-3" />
-                  Join 50,000+ Students
+            <div className="relative rounded-2xl border border-white/[0.08] bg-[#050913] p-10 md:p-14 text-center overflow-hidden shadow-2xl">
+              <div className="relative z-10 space-y-4 flex flex-col items-center justify-center">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3" /> Start Learning Faster
                 </div>
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight leading-tight">
-                  Ready to Ace Your<br />
-                  <span className="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent">Next Exam?</span>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
+                  Ready to upgrade your study workflow?
                 </h2>
-                <p className="text-slate-400 max-w-xl mx-auto mb-10 text-sm leading-relaxed">
-                  Join thousands of students processing PDFs, mastering flashcards, and chatting with AI tutors every day.
+                <p className="text-slate-400 max-w-md mx-auto text-xs font-light leading-relaxed">
+                  Join over 50,000 students using clear, structured summaries and active flashcards to lock in top scores.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <button onClick={() => navigate('/auth?mode=signup')}
-                    className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-sm text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300 active:scale-[0.97]">
-                    Create Free Account
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full sm:w-auto">
+                  <button onClick={() => navigate('/auth?mode=signup')} className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs text-black bg-white hover:bg-slate-100 transition-all">
+                    Get Started For Free
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                   </button>
-                  <Link to="/auth?mode=login"
-                    className="inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm font-semibold transition-colors">
-                    Already have an account? Sign in
+                  <Link to="/auth?mode=login" className="text-xs text-slate-400 hover:text-white transition-colors font-medium">
+                    Already have an account? Sign In
                   </Link>
                 </div>
               </div>
@@ -483,40 +392,33 @@ export const Landing = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════ FOOTER ══════════════════════════ */}
-      <footer className="relative z-10 border-t border-white/[0.05] bg-[#090d16] py-14 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
-            {/* Brand col */}
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-500 flex items-center justify-center">
-                  <Brain className="w-4 h-4 text-white" />
+      {/* ══════════════════════════ SYSTEM FOOTER LINKS ══════════════════════════ */}
+      <footer className="relative z-10 border-t border-white/[0.06] bg-[#02050c] py-12 px-6 text-slate-500 text-left">
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+            <div className="md:col-span-2 space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center">
+                  <Brain className="w-3 h-3 text-white" />
                 </div>
-                <span className="font-bold text-white">Memora AI</span>
+                <span className="font-bold text-sm text-white">Memora AI</span>
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed max-w-xs">
-                AI-powered study tools that help students learn faster, retain longer, and perform better.
+              <p className="text-xs max-w-xs leading-relaxed font-light">
+                Beautiful study workspaces engineered to transform massive lecture slide files into crisp, active recall resources instantly.
               </p>
-              <div className="flex gap-3 mt-5">
-                {['Twitter', 'LinkedIn', 'GitHub'].map(s => (
-                  <a key={s} href="#" className="text-[10px] font-semibold text-slate-600 hover:text-slate-300 transition-colors border border-white/[0.06] px-3 py-1.5 rounded-lg hover:border-white/[0.15]">{s}</a>
-                ))}
-              </div>
             </div>
 
-            {/* Links */}
             {[
-              { title: 'Platform', links: ['AI Summarizer', 'Flashcards', 'Smart Quiz', 'Book Library'] },
-              { title: 'Resources', links: ['Student Guides', 'API Docs', 'Sample Library', 'Security'] },
-              { title: 'Company', links: ['About Us', 'Careers', 'Privacy Policy', 'Terms of Service'] },
+              { title: 'Platform', links: ['Note Summarizer', 'Smart Flashcards', 'Practice Exams'] },
+              { title: 'Resources', links: ['Student Guides', 'Security Specs', 'System Status'] },
+              { title: 'Company', links: ['About Us', 'Privacy Policy', 'Terms of Use'] },
             ].map(col => (
-              <div key={col.title}>
-                <h4 className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-4">{col.title}</h4>
-                <ul className="space-y-2.5">
+              <div key={col.title} className="space-y-3">
+                <h4 className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">{col.title}</h4>
+                <ul className="space-y-1.5">
                   {col.links.map(link => (
                     <li key={link}>
-                      <a href="#" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">{link}</a>
+                      <a href="#" className="text-xs hover:text-slate-300 transition-colors font-light">{link}</a>
                     </li>
                   ))}
                 </ul>
@@ -524,12 +426,10 @@ export const Landing = () => {
             ))}
           </div>
 
-          <div className="h-px bg-white/[0.05] mb-7" />
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-600">
+          <div className="h-px bg-white/[0.05]" />
+          <div className="flex flex-col md:flex-row items-center justify-between text-[10px] font-mono gap-2 md:gap-0">
             <p>© 2026 Memora AI Inc. All rights reserved.</p>
-            <p className="flex items-center gap-1.5">
-              Built with <span className="text-rose-500">♥</span> for students worldwide
-            </p>
+            <p className="text-slate-600">Built with love for high-performing students everywhere.</p>
           </div>
         </div>
       </footer>

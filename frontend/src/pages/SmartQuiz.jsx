@@ -33,7 +33,7 @@ const performanceCopy = (percentage) => {
 };
 
 export const SmartQuiz = () => {
-  const { addToast, submitQuizScore } = useStudy();
+  const { submitQuizScore } = useStudy();
   const fileInputRef = useRef(null);
   const [notesText, setNotesText] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -65,7 +65,7 @@ export const SmartQuiz = () => {
       setAttempts(attemptResponse.data || []);
       setAnalytics(analyticsResponse.data || null);
     } catch (error) {
-      addToast(error.message || 'Could not load quiz history.', 'error');
+      setErrorMessage(error.message || 'Could not load quiz history.');
     }
   };
 
@@ -82,7 +82,7 @@ export const SmartQuiz = () => {
     if (!file) return false;
     const isPdf = file.name.toLowerCase().endsWith('.pdf') && (!file.type || file.type.includes('pdf') || file.type === 'application/octet-stream');
     if (!isPdf) {
-      addToast('Only PDF files are supported.', 'error');
+      setErrorMessage('Only PDF files are supported.');
       return false;
     }
     if (file.size > MAX_PDF_SIZE) {
@@ -102,18 +102,18 @@ export const SmartQuiz = () => {
 
   const handleGenerateQuiz = async () => {
     if (!selectedFile && notesText.trim().length < 80) {
-      addToast('Paste at least 80 characters or upload a PDF.', 'error');
+      setErrorMessage('Paste at least 80 characters or upload a PDF.');
       return;
     }
 
     if (!difficulty) {
-      addToast('Please select a difficulty level.', 'error');
+      setErrorMessage('Please select a difficulty level.');
       return;
     }
 
     const count = parseInt(questionCount, 10);
     if (!count || count < 1 || count > 8) {
-      addToast('Please enter a valid question count between 1 and 8.', 'error');
+      setErrorMessage('Please enter a valid question count between 1 and 8.');
       return;
     }
 
@@ -147,7 +147,6 @@ export const SmartQuiz = () => {
     } catch (error) {
       const message = error?.message || 'AI quiz generation failed. Please try again.';
       setErrorMessage(message);
-      addToast(message, 'error');
     } finally {
       setIsGenerating(false);
     }
@@ -162,7 +161,7 @@ export const SmartQuiz = () => {
       setAnswers({});
       setAttemptResult(null);
     } catch (error) {
-      addToast(error.message || 'Could not open quiz.', 'error');
+      setErrorMessage(error.message || 'Could not open quiz.');
     }
   };
 
@@ -171,7 +170,7 @@ export const SmartQuiz = () => {
 
     const missingCount = activeQuiz.questions.filter((question) => !answers[question._id]).length;
     if (missingCount > 0) {
-      addToast(`Answer ${missingCount} more question${missingCount === 1 ? '' : 's'} before submitting.`, 'warning');
+      setErrorMessage(`Answer ${missingCount} more question${missingCount === 1 ? '' : 's'} before submitting.`);
       return;
     }
 
@@ -187,7 +186,7 @@ export const SmartQuiz = () => {
       submitQuizScore(getQuizId(activeQuiz), response.data.percentage);
       await loadQuizData(search);
     } catch (error) {
-      addToast(error.message || 'Could not submit quiz.', 'error');
+      setErrorMessage(error.message || 'Could not submit quiz.');
     } finally {
       setIsSubmitting(false);
     }
