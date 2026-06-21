@@ -182,9 +182,11 @@ export const DashboardLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-lightBg dark:bg-[#080d19] text-textPrimary dark:text-slate-100 flex relative overflow-x-hidden font-sans transition-colors duration-200">
-      {/* Glow orbs in background */}
-      <div className="glow-orb w-96 h-96 bg-aiPrimary/15 top-10 left-10" />
-      <div className="glow-orb w-96 h-96 bg-aiPrimary/10 bottom-10 right-10" />
+      {/* Glow orbs — fixed + clipped so they never overflow/glitch on mobile */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="glow-orb w-48 h-48 sm:w-80 sm:h-80 bg-aiPrimary/10 dark:bg-aiPrimary/15 top-10 left-10" />
+        <div className="glow-orb w-48 h-48 sm:w-80 sm:h-80 bg-aiPrimary/8 dark:bg-aiPrimary/12 bottom-10 right-10" />
+      </div>
 
       {/* Desktop Sidebar (Left Panel) */}
       <aside className="hidden lg:flex flex-col w-64 border-r border-border dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 h-screen z-20 shadow-sm transition-colors duration-200">

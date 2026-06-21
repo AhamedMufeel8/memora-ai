@@ -109,14 +109,15 @@
 .glow-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.08;
+  filter: blur(80px);
+  opacity: 0.06;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
 }
 
 .dark .glow-orb {
-  opacity: 0.25;
+  opacity: 0.18;
 }
 
 /* Interactive Card Flip Classes */
