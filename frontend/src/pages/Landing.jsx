@@ -103,7 +103,7 @@ export const Landing = () => {
       </div>
 
       {/* ══════════════════════════ NAVIGATION BAR ══════════════════════════ */}
-      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${navScrolled ? 'bg-[#030712]/80 backdrop-blur-xl border-b border-white/[0.06] shadow-xl' : 'bg-transparent'}`}>
+      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${navScrolled || mobileOpen ? 'bg-[#030712]/95 backdrop-blur-xl border-b border-white/[0.06] shadow-xl' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
@@ -131,10 +131,46 @@ export const Landing = () => {
             </Link>
           </div>
 
-          <button className="md:hidden p-2 text-slate-400 hover:text-white" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          <button
+            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+
+        {/* ── Mobile Dropdown Menu ── */}
+        {mobileOpen && (
+          <div className="md:hidden border-t border-white/[0.06] bg-[#030712]/98 backdrop-blur-xl px-6 py-5 flex flex-col gap-1">
+            {['Features', 'Pricing', 'Testimonials'].map(link => (
+              <a
+                key={link}
+                href={`#${link.toLowerCase()}`}
+                onClick={() => setMobileOpen(false)}
+                className="py-3 text-sm font-semibold text-slate-300 hover:text-white border-b border-white/[0.04] last:border-0 transition-colors"
+              >
+                {link}
+              </a>
+            ))}
+            <div className="flex flex-col gap-3 pt-4">
+              <Link
+                to="/auth?mode=login"
+                onClick={() => setMobileOpen(false)}
+                className="w-full py-3 rounded-xl text-sm font-bold text-center border border-white/[0.12] text-slate-200 hover:bg-white/5 transition-all"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/auth?mode=signup"
+                onClick={() => setMobileOpen(false)}
+                className="w-full py-3 rounded-xl text-sm font-bold text-center bg-emerald-400 text-black hover:bg-emerald-300 transition-all shadow-lg shadow-emerald-500/20"
+              >
+                Start Free — No credit card
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ══════════════════════════ HERO SUITE (CENTER ALIGNED) ══════════════════════════ */}
