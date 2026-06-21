@@ -105,20 +105,6 @@
   background: rgba(15, 107, 67, 0.45);
 }
 
-/* Background animated glow orbs */
-.glow-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.06;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform;
-}
-
-.dark .glow-orb {
-  opacity: 0.18;
-}
 
 /* Interactive Card Flip Classes */
 .flip-card {
